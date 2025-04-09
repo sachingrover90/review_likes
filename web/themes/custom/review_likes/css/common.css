@@ -1,0 +1,10 @@
+header.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: auto;
+    z-index: 5;
+    background-color: #ffffff;
+    box-shadow: 0 10px 15px rgb(25 25 25 / 10%);
+    transition: all 0.55s ease-in-out;
+  }

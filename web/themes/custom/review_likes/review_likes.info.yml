@@ -1,0 +1,14 @@
+name: ReviewLikes 
+description: this is review likes theme
+type: theme
+core_version_requirement: ^10
+package: other
+base theme: false
+libraries:
+  - review_likes/global-styling
+regions:
+  header: Header
+  primary_menu: Primary Menu
+  sidebar: Sidebar
+  content: Content
+  footer: Footer
