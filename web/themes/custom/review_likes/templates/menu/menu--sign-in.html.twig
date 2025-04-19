@@ -37,7 +37,7 @@
     
     {% endif %}
     {% for item in items %}
-      <button type="button" class="btn btn-default" href="item.url">{{ item.title }}</button>
+      <a class="btn btn-default" href="{{item.url}}">{{ item.title }}</a>
         {#{ link(item.title, item.url) }#}
 
       

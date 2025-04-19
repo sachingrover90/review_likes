@@ -1,0 +1,11 @@
+{% set element_id = element['#id'] ?? '' %}
+
+{% if element_id == 'edit-search' %}
+  {% set updated_attributes = attributes.setAttribute('placeholder', 'Search product here') %}
+  <input{{ updated_attributes }} />
+  {{ children }}
+{% else %}
+  <input{{ attributes }} />
+  {{ children }}
+{% endif %}
+

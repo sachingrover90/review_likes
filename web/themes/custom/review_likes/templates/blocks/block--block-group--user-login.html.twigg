@@ -27,20 +27,20 @@
  *
  * @ingroup themeable
  */
-#}
- 
-          
-             
-<div class="col-md-2 advertising-section">
+#} 
+         <div class="container-fluid">
+            <div class="row">
+               <div class="col-sm-6 leftsection">
+                  {{content.review_likes_signin_3}}
+                  
+               </div>
+               <div class="col-sm-6 rightsection">
+                  <div class="formsection">
+                     {{content.review_likes_userlogin}}
+                  </div>
+               </div>
+            </div>
+         </div>
+         
 
-
-  {{ title_prefix }}
-  {% if label %}
-    
-  {% endif %}
-  {{ title_suffix }}
-  {% block content %}
-    {{ content }}
-  {% endblock %}
-</div>
  

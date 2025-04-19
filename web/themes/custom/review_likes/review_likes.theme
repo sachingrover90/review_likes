@@ -1,0 +1,198 @@
+<?php
+use Drupal\Core\Url;
+use Drupal\Core\Path\PathMatcher;
+use Drupal\user\Entity\Role;
+
+
+
+function review_likes_preprocess_image(array &$variables) {
+  // Remove height and width attributes
+  unset($variables['attributes']['height']);
+  unset($variables['attributes']['width']);
+}
+
+
+
+
+
+
+
+
+
+
+/**
+ * Implements hook_theme_suggestions_form_alter().
+ */
+function review_likes_theme_suggestions_form_alter(array &$suggestions, array $variables) {
+  $form_id = $variables['element']['#form_id'];
+
+  if ($form_id === 'user_login_form') {
+    // Add a custom template suggestion.
+    $suggestions[] = 'form__user_login';
+  }
+  if ($form_id === 'user_register_form') {
+    // Add a custom template suggestion.
+    $suggestions[] = 'form__user_register';
+  }
+}
+
+
+function review_likes_page_attachments_alter(array &$attachments) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $current_url = Url::fromRoute('<current>')->setAbsolute()->toString();
+
+  \Drupal::logger('review_likes')->notice('Current route: @route', ['@route' => $current_url]);
+
+  if ($route_name === 'user.login') {
+    $attachments['#attached']['library'][] = 'review_likes/signin-styling';
+  }
+
+  if ($route_name === 'user.register') {
+    $attachments['#attached']['library'][] = 'review_likes/signup-styling';
+   
+    
+  }
+    // Front page styling
+  $current_path = \Drupal::service('path.current')->getPath();
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    $attachments['#attached']['library'][] = 'review_likes/global-styling';
+  }
+}
+
+function review_likes_form_user_register_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+	 // Add wrapper class to First Name
+  if (isset($form['field_first_name'])) {
+    $form['field_first_name']['#wrapper_attributes']['class'][] = 'col-md-6';
+  }
+
+  // Add wrapper class to Last Name
+  if (isset($form['field_last_name'])) {
+    $form['field_last_name']['#wrapper_attributes']['class'][] = 'col-md-6';
+  }
+
+  // Add wrapper class to Email
+  if (isset($form['account']['mail'])) {
+    $form['account']['mail']['#wrapper_attributes']['class'][] = 'col-md-6';
+  }
+
+  // Add wrapper class to Phone Number
+  if (isset($form['field_phone_number'])) {
+    $form['field_phone_number']['#wrapper_attributes']['class'][] = 'col-md-6';
+  }
+
+  // First Name
+  $form['field_first_name']['widget'][0]['value']['#attributes']['class'][] = 'form-control mb-3';
+   $form['account']['name']['#title_display'] = 'invisible'; 
+  $form['field_first_name']['widget'][0]['value']['#attributes']['placeholder'] = 'First Name';
+
+  // Last Name
+  $form['field_last_name']['widget'][0]['value']['#attributes']['class'][] = 'form-control mb-3';
+  $form['field_last_name']['widget'][0]['value']['#title_display'] = 'invisible';
+  $form['field_last_name']['widget'][0]['value']['#attributes']['placeholder'] = 'Last Name';
+
+  // Phone Number
+  $form['field_phone_number']['widget'][0]['value']['#attributes']['class'][] = 'form-control mb-3';
+  $form['field_phone_number']['widget'][0]['value']['#title_display'] = 'invisible';
+  $form['field_phone_number']['widget'][0]['value']['#attributes']['placeholder'] = 'Phone Number';
+
+
+// Email field
+$form['account']['mail']['#attributes']['class'][] = 'form-control';
+$form['account']['mail']['#attributes']['class'][] = 'mb-3';
+$form['account']['mail']['#title_display'] = 'invisible'; // 👈 Hides the label
+$form['account']['mail']['#description'] = '';            // Removes description
+$form['account']['mail']['#attributes']['placeholder'] = 'Email'; // Optional placeholder
+
+
+  if (isset($form['account']['pass'])) {
+    // Override after the form is fully built
+    $form['#after_build'][] = 'review_likes_customize_password_fields';
+  }
+
+  // Update the submit button
+$form['actions']['submit']['#attributes']['class'][] = 'btn';
+$form['actions']['submit']['#attributes']['class'][] = 'btn-default';
+$form['actions']['submit']['#attributes']['class'][] = 'mt-3';
+
+// Change the button text
+$form['actions']['submit']['#value'] = 'Sign Up';
+
+// Completely hide the username field
+#$form['account']['name']['#access'] = FALSE;
+
+ 
+
+}
+
+
+
+
+function review_likes_customize_password_fields($form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  // Password 1
+  $form['account']['pass']['pass1']['#attributes']['class'][] = 'form-control';
+  $form['account']['pass']['pass1']['#attributes']['class'][] = 'mb-3';
+  $form['account']['pass']['pass1']['#attributes']['placeholder'] = 'Password';
+  $form['account']['pass']['pass1']['#title_display'] = 'invisible';
+
+  // Confirm Password
+  $form['account']['pass']['pass2']['#attributes']['class'][] = 'form-control';
+  $form['account']['pass']['pass2']['#attributes']['class'][] = 'mb-3';
+  $form['account']['pass']['pass2']['#attributes']['placeholder'] = 'Confirm Password';
+  $form['account']['pass']['pass2']['#title_display'] = 'invisible';
+
+  $form['account']['pass']['#description'] = '';
+
+
+  return $form;
+}
+function review_likes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'user_register_form') {
+
+    // Target the username field
+    if (isset($form['account']['name'])) {
+      $form['account']['name']['#description'] = '';
+
+      // Set attributes correctly (as an array)
+      $form['account']['name']['#attributes']['placeholder'] = 'First Name';
+      $form['account']['name']['#attributes']['size'] = 33; // Optional: input field width
+      $form['account']['name']['#attributes']['maxlength'] = 80; // Optional: max character limit
+
+      // Add Bootstrap classes
+      $form['account']['name']['#attributes']['class'][] = 'form-control';
+      $form['account']['name']['#attributes']['class'][] = 'mb-3';
+    }
+  }
+}
+
+function review_likes_form_user_login_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Add class and placeholder to the username field
+  if (isset($form['name'])) {
+    $form['name']['#title_display'] = 'invisible';
+    $form['name']['#attributes']['class'][] = 'form-control mb-4';
+    $form['name']['#attributes']['placeholder'] = t('Enter your username or email');
+  }
+
+  // Add class and placeholder to the password field
+  if (isset($form['pass'])) {
+    $form['pass']['#title_display'] = 'invisible';
+    $form['pass']['#attributes']['class'][] = 'form-control mb-4';
+    $form['pass']['#attributes']['placeholder'] = t('Enter your password');
+  }
+
+  // Add classes to the login button
+  if (isset($form['actions']['submit'])) {
+    $form['actions']['submit']['#attributes']['class'][] = 'btn';
+    $form['actions']['submit']['#attributes']['class'][] = 'btn-default';
+    $form['actions']['submit']['#attributes']['class'][] = 'mt-3';
+  }
+}
+
+function review_likes_preprocess_views_exposed_form(&$variables) {
+  if (isset($variables['form']['field_filter_target_id'])) {
+    $variables['form']['field_filter_target_id']['#attributes']['class'][] = 'sort-dropdown';
+    
+  }
+}
+ 
+

@@ -54,6 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const filterDropdown = document.querySelector('.sort-dropdown');
+    if (filterDropdown) {
+      filterDropdown.addEventListener('change', function () {
+        this.form.submit(); // Submit the parent form
+      });
+    }
+  });
+
 function toggleCategories() {
     var checkboxes = document.querySelectorAll(".checkboxsection .form-check");
     var moreLink = document.getElementById("toggleLink");

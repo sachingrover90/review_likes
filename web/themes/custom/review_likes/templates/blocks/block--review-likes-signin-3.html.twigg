@@ -28,19 +28,7 @@
  * @ingroup themeable
  */
 #}
- 
-          
-             
-<div class="col-md-2 advertising-section">
-
-
-  {{ title_prefix }}
-  {% if label %}
-    
-  {% endif %}
-  {{ title_suffix }}
-  {% block content %}
-    {{ content }}
-  {% endblock %}
-</div>
- 
+{{content.body}}
+                  <div class="image-section text-center">
+                     <img src="/review_likes/web/sites/default/files/2025-04/login.svg" alt="login image" class="w-50">
+                  </div>
