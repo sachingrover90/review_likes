@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains hooks and implementations for the role_based_registration module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function role_based_registration_page_attachments(array &$attachments) {
+  // Attach the library only on the custom registration route.
+  if (\Drupal::routeMatch()->getRouteName() === 'role_based_registration.register') {
+    $attachments['#attached']['library'][] = 'role_based_registration/registration_form';
+  }
+}

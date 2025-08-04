@@ -1,0 +1,18 @@
+
+{% set element_id = element['#id'] ?? '' %}
+{% set element_name = element['#name'] ?? '' %}
+
+{% if element_id == 'edit-search' %}
+{# Customize the 'edit-search' input #}
+{% set updated_attributes = attributes.setAttribute('placeholder', 'Search product here') %}
+{% set updated_attributes = updated_attributes.addClass('form-control') %}
+<input{{ updated_attributes }} />
+{{ children }}
+{% elseif element_id == 'role-based-register-form' %}
+ {% set updated_attributes = updated_attributes.addClass('form-control mb-3') %}
+ {% elseif "edit-role-fields-user-details-first-name" in id or "edit-role-fields-user-details-last-name" in id %}
+ <input{{ attributes.removeAttribute('class') }} class="form-control mb-3" />
+{% else %}
+<input{{ attributes }} />
+{{ children }}
+{% endif %}

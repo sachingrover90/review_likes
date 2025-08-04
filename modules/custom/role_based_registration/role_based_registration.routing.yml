@@ -1,0 +1,8 @@
+role_based_registration.register:
+  path: '/role-register'
+  defaults:
+    _form: '\Drupal\role_based_registration\Form\RoleBasedRegisterForm'
+    _title: 'Role Based Registration'
+  requirements:
+    _permission: 'access content'
+
