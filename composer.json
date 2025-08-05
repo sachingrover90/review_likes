@@ -32,6 +32,7 @@
         "drupal/like_dislike": "^2.4",
         "drupal/link_attributes": "^2.1",
         "drupal/paragraphs": "^1.19",
+        "drupal/pathauto": "^1.13",
         "drupal/quick_node_clone": "^1.22",
         "drupal/range": "^1.6",
         "drupal/redirect_after_login": "^3.0",
