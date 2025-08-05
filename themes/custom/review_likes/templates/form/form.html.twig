@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Theme override for a comment form.
+ *
+ * Variables:
+ * - attributes: HTML attributes for the <form> tag.
+ * - children: All form fields and buttons.
+ * - form_id: The actual ID of the form (must be passed from preprocess).
+ */
+#}
+
+ 
+ {% if element['#id'] == 'views-exposed-form-product-block-1' %}
+  <form{{ attributes.addclass('w-100') }}>
+  {% else %}
+    <form{{ attributes }}>
+    {% endif %}
+    {{ children }}
+  </form>
+ 

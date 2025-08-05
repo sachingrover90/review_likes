@@ -1,0 +1,250 @@
+/* Created on 29-01-2025 */
+/* This is style sheet for Home page */
+
+body {
+	background-color: #F8F8F8;
+	padding: 0;
+	margin: 0;
+}
+
+header .container-fluid {
+	padding: 0 3rem;
+}
+
+.main-navbar {
+	background-color: #ffffff;
+	border: 1px solid #EDE4E4;
+	padding: 0;
+	-webkit-box-shadow: 0px 0px 9px 3px rgba(41, 41, 41, .25);
+	-moz-box-shadow: 0px 0px 9px 3px rgba(41, 41, 41, .25);
+	box-shadow: 0px 0px 9px 3px rgba(41, 41, 41, .25);
+}
+
+.logo {
+	font-size: 1.75rem;
+	color: #434343;
+	font-family: "Kaushan Script", serif;
+	font-weight: 400;
+	font-style: normal;
+	padding: 0;
+}
+
+.main-navbar .navbar-nav .nav-link,
+.modal-content {
+	font-family: "Arima", serif;
+	font-size: 1rem;
+	color: #434343;
+	padding: 1rem;
+}
+
+.modal-content h6 {
+	font-weight: 600;
+}
+
+.main-navbar .navbar-nav .nav-link.active {
+	color: #ffa92a;
+	border-bottom: 4px solid #ffa92a;
+}
+
+.btn-default {
+	height: 46px;
+	--bs-btn-color: #ffffff;
+	--bs-btn-bg: #ffa92a;
+	--bs-btn-border-color: #ffa92a;
+	--bs-btn-hover-color: #ffffff;
+	--bs-btn-hover-bg: #e5a13c;
+	--bs-btn-hover-border-color: #ffa92a;
+	--bs-btn-focus-shadow-rgb: 217, 164, 6;
+	--bs-btn-active-color: #ffffff;
+	--bs-btn-active-bg: #ffa92a;
+	--bs-btn-active-border-color: #ffa92a;
+	--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+	--bs-btn-disabled-color: #ffffff;
+	--bs-btn-disabled-bg: #ffa92a;
+	--bs-btn-disabled-border-color: #ffa92a;
+	padding: 0 15px;
+	white-space: nowrap;
+}
+
+.main-navbar .d-flex {
+	align-items: center;
+	gap: 10px;
+}
+
+.main-navbar select {
+	height: 45px;
+	width: 120px;
+	--bs-form-select-bg-img: url(../images/downarrow.svg);
+}
+
+.performancemetric-section {
+	margin-top: 4rem;
+	padding: 2rem;
+	border: 1px solid #E1DDDD;
+}
+
+.trendingvideo-section {
+	margin-top: 4rem;
+	padding: 2rem;
+	border: 1px solid #E1DDDD;
+}
+
+.performancemetric-section h2 {
+	text-align: center;
+	font-size: 1.75rem;
+	margin-bottom: 2.5rem;
+}
+
+.performancemetric-section .label-head {
+	font-family: "Arima", serif;
+	font-weight: 500;
+	margin-right: 1rem;
+}
+
+.cardgreen-text {
+	color: #c3c13e;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.purple-text {
+	color: #a667d2;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.carddarkgreen-text {
+	color: #4aa553;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.cardblue-text {
+	color: #5c8ecf;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.cardyellow-text {
+	color: #e3b51f;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.cardred-text {
+	color: #F36769;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.lightgreen-text {
+	color: #C3C13E;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.pink-text {
+	color: #E31F74;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.lightblue-text {
+	color: #58C192;
+	font-family: "Arima", serif;
+	font-weight: 600;
+	font-size: 1.4rem;
+}
+
+.chart-container {
+	width: 80%;
+	max-width: 600px;
+	margin: auto;
+	background: white;
+	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+}
+
+.trendingvideo-section video {
+	border-radius: 10px !important;
+	width: 100%;
+	margin-top: 2rem;
+}
+
+.trendingvideo-section h2 {
+	text-align: center;
+	font-size: 1.75rem;
+}
+
+.taskmanagement-section,
+.notification-section {
+	margin-top: 3rem;
+	padding: 2rem;
+	border: 1px solid #E1DDDD;
+	margin-bottom: 1rem;
+}
+
+.gamechanger-section {
+	margin-top: 2rem;
+	padding: 2rem;
+	border: 1px solid #E1DDDD;
+	margin-bottom: 3rem;
+}
+
+.taskmanagement-section h2,
+.notification-section h2,
+.gamechanger-section h2 {
+	text-align: center;
+	font-size: 1.75rem;
+}
+
+/****** TABLET LANDSCAPE STYLES START **********/
+@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {}
+
+/****** TABLET LANDSCAPE STYLES END **********/
+/****** TABLET PORTRAIT STYLES START **********/
+/* @media only screen and (min-width: 1110px) and (max-width: 1160px) {
+  .price{
+    width: 40%;
+  }
+} */
+@media only screen and (min-width: 768px) and (max-width: 1200px) and (orientation: portrait) {}
+
+/****** TABLET PORTRAIT STYLES END **********/
+/****** MOBILE LANDSCAPE STYLES START **********/
+@media only screen and (max-width: 992px) and (orientation: landscape) {}
+
+/****** MOBILE LANDSCAPE STYLES END **********/
+/****** MOBILE PORTRAIT STYLES START **********/
+@media only screen and (min-width: 250px) and (max-width:767px) and (orientation:portrait) {
+	.metrics-section .container {
+		margin: 0 auto;
+		width: 90%;
+	}
+
+	.performancemetric-section>.row {
+		text-align: center;
+	}
+
+	.form-select {
+		width: 100% !important;
+		margin: 1rem auto;
+	}
+
+	.taskmanagement-section h2,
+	.notification-section h2,
+	.gamechanger-section h2 {
+		font-size: 1.5rem;
+	}
+}
+
+/****** MOBILE PORTRAIT STYLES END **********/

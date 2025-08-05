@@ -1,0 +1,7 @@
+name: 'Role Based Registration'
+type: module
+description: 'Custom user registration form with role-specific fields.'
+core_version_requirement: ^10
+package: Custom
+dependencies:
+  - user

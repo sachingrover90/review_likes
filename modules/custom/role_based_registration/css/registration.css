@@ -1,0 +1,54 @@
+/* Input styles based on specific classes */
+.username-input,
+.email-input,
+.password-input {
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* Ensure form select matches input styling */
+select {
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* Style the main Register button */
+.btn-primary {
+  background-color: #007cba;
+  border-color: #007cba;
+  color: #fff;
+  padding: 10px 2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #005b9a;
+  border-color: #005b9a;
+}
+
+/* Add margin to repeated fieldsets */
+#role-fields-wrapper fieldset {
+  margin-top: 1rem;
+  border: 1px dashed #b3d4fc;
+  padding: 1rem;
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+/* Add spacing between dynamic entries */
+#role-fields-wrapper input[type="text"],
+#role-fields-wrapper input[type="url"],
+#role-fields-wrapper input[type="email"],
+#role-fields-wrapper textarea {
+  margin-bottom: 0.75rem;
+}
+
+/* Add spacing between add buttons */
+#role-fields-wrapper input[type="submit"] {
+  margin-top: 1rem;
+}
