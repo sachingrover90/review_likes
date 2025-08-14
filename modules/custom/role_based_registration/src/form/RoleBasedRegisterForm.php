@@ -41,7 +41,7 @@ class RoleBasedRegisterForm extends FormBase {
         'authenticated' => $this->t('Authenticated user'),
         'merchant' => $this->t('Merchant'),
         'gamechanger' => $this->t('Game changer'),
-        'tester' => $this->t('Tester'),
+        // 'tester' => $this->t('Tester'),
         
         
       ],
