@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: tester
-label: tester
+label: Tester
 weight: 6
 is_admin: null
 permissions: {  }

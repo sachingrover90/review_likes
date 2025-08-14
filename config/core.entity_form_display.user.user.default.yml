@@ -3,11 +3,13 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_checkbox
     - field.field.user.user.field_first_name
     - field.field.user.user.field_last_name
     - field.field.user.user.field_phone_number
     - field.field.user.user.user_picture
   module:
+    - path
     - user
 _core:
   default_config_hash: FaQ9Ptcpxpg30AtiqRDtl_8zbJArHP1LPfug_s59TOA
@@ -17,13 +19,20 @@ bundle: user
 mode: default
 content:
   account:
-    weight: 2
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_checkbox:
+    type: boolean_checkbox
+    weight: 4
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_last_name:
     type: string_textfield
-    weight: 0
+    weight: 1
     region: content
     settings:
       size: 60
@@ -31,11 +40,17 @@ content:
     third_party_settings: {  }
   field_phone_number:
     type: string_textfield
-    weight: 1
+    weight: 2
     region: content
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 3
+    region: content
+    settings: {  }
     third_party_settings: {  }
 hidden:
   contact: true

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: game_changer
-label: 'Game changer'
+label: 'Game Changer'
 weight: 5
 is_admin: null
 permissions: {  }

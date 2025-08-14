@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: merchant
-label: Merchant
+label: Merchants
 weight: 4
 is_admin: false
 permissions: {  }
