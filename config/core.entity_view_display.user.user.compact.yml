@@ -10,7 +10,6 @@ dependencies:
     - field.field.user.user.field_language
     - field.field.user.user.field_last_name
     - field.field.user.user.field_mobile_number
-    - field.field.user.user.field_phone
     - field.field.user.user.field_phone_number
     - field.field.user.user.user_picture
     - image.style.thumbnail
@@ -43,6 +42,5 @@ hidden:
   field_language: true
   field_last_name: true
   field_mobile_number: true
-  field_phone: true
   field_phone_number: true
   member_for: true

@@ -9,7 +9,6 @@ dependencies:
     - field.field.user.user.field_language
     - field.field.user.user.field_last_name
     - field.field.user.user.field_mobile_number
-    - field.field.user.user.field_phone
     - field.field.user.user.field_phone_number
     - field.field.user.user.user_picture
   module:
@@ -71,14 +70,6 @@ content:
       as_link: false
     third_party_settings: {  }
     weight: 11
-    region: content
-  field_phone:
-    type: mobile_number_international
-    label: above
-    settings:
-      as_link: false
-    third_party_settings: {  }
-    weight: 7
     region: content
   field_phone_number:
     type: string

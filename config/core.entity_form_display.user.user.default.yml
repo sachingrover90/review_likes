@@ -9,14 +9,11 @@ dependencies:
     - field.field.user.user.field_language
     - field.field.user.user.field_last_name
     - field.field.user.user.field_mobile_number
-    - field.field.user.user.field_phone
     - field.field.user.user.field_phone_number
     - field.field.user.user.user_picture
   module:
     - country
-    - mobile_number
     - path
-    - telephone
     - user
 _core:
   default_config_hash: FaQ9Ptcpxpg30AtiqRDtl_8zbJArHP1LPfug_s59TOA
@@ -39,13 +36,13 @@ content:
     third_party_settings: {  }
   field_country:
     type: country_default
-    weight: 8
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_language:
     type: options_select
-    weight: 10
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -55,22 +52,6 @@ content:
     region: content
     settings:
       size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_mobile_number:
-    type: mobile_number_default
-    weight: 11
-    region: content
-    settings:
-      countries: {  }
-      default_country: US
-      placeholder: null
-    third_party_settings: {  }
-  field_phone:
-    type: telephone_default
-    weight: 7
-    region: content
-    settings:
       placeholder: ''
     third_party_settings: {  }
   field_phone_number:
@@ -90,6 +71,7 @@ content:
 hidden:
   contact: true
   field_first_name: true
+  field_mobile_number: true
   language: true
   timezone: true
   user_picture: true
