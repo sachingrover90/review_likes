@@ -5,8 +5,12 @@ dependencies:
   config:
     - core.entity_view_mode.user.compact
     - field.field.user.user.field_checkbox
+    - field.field.user.user.field_country
     - field.field.user.user.field_first_name
+    - field.field.user.user.field_language
     - field.field.user.user.field_last_name
+    - field.field.user.user.field_mobile_number
+    - field.field.user.user.field_phone
     - field.field.user.user.field_phone_number
     - field.field.user.user.user_picture
     - image.style.thumbnail
@@ -34,7 +38,11 @@ content:
 hidden:
   blog__personal_blog_link: true
   field_checkbox: true
+  field_country: true
   field_first_name: true
+  field_language: true
   field_last_name: true
+  field_mobile_number: true
+  field_phone: true
   field_phone_number: true
   member_for: true

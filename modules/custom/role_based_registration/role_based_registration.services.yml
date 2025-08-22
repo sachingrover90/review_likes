@@ -1,0 +1,6 @@
+services:
+  role_based_registration.access_check:
+    class: Drupal\role_based_registration\Access\BusinessRegistrationAccessCheck
+    arguments: ['@current_route_match']
+    tags:
+      - { name: access_check, applies_to: _role_based_registration_access }

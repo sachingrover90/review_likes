@@ -1,33 +1,23 @@
-(function ($, Drupal) {
-  Drupal.behaviors.registrationForm = {
-    attach: function (context, settings) {
-      // Apply once to avoid multiple bindings after AJAX
-      once('role-style', '#edit-role', context).forEach(function (el) {
-        $(el).css('border-color', 'blue');
-
-        $(el).on('change', function () {
-          // Smooth scroll to role fields when role is selected
-          var $target = $('#role-fields-wrapper', context);
-          if ($target.length) {
-            $('html, body').animate({
-              scrollTop: $target.offset().top - 100 // small offset for spacing
-            }, 500, function () {
-              $target.attr('tabindex', -1).focus();
-            });
-          }
-        });
+(function($, Drupal) {
+  Drupal.behaviors.roleBasedRegistration = {
+    attach: function(context, settings) {
+      // Update checkboxes when select changes
+      $('#custom-role-select', context).once('role-select').change(function() {
+        var role = $(this).val();
+        // Uncheck all role checkboxes
+        $('input[name^="roles["]').prop('checked', false);
+        // Check the selected one
+        if (role) {
+          $('#edit-roles-' + role).prop('checked', true);
+        }
       });
-
-      // Optional: Animate any AJAX-add buttons
-      once('ajax-add-buttons', '.form-submit', context).forEach(function (button) {
-        $(button).on('click', function () {
-          $(button).addClass('loading');
-          setTimeout(function () {
-            $(button).removeClass('loading');
-          }, 1000);
-        });
+      
+      // Update select when checkboxes change
+      $('input[name^="roles["]', context).once('role-checkbox').change(function() {
+        if ($(this).is(':checked') && $(this).val() !== 'authenticated') {
+          $('#custom-role-select').val($(this).val());
+        }
       });
     }
   };
 })(jQuery, Drupal);
-

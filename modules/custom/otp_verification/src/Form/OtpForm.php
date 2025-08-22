@@ -65,7 +65,10 @@ class OtpForm extends FormBase {
         $user->activate()->save();
         user_login_finalize($user);
         $this->messenger()->addStatus($this->t('Your account has been verified.'));
-        $form_state->setRedirect('<front>');
+        // $form_state->setRedirect('<front>');
+        $form_state->setRedirect('role_based_registration.profile_completion', [
+      'user' => $this->user->id()
+    ]);
       }
     }
     elseif ($status === 'invalid') {
@@ -77,6 +80,7 @@ class OtpForm extends FormBase {
     elseif ($status === 'blocked') {
       $this->messenger()->addError($this->t('Too many failed attempts. Please try again later.'));
     }
+    
   }
 
   public function resendOtp(array &$form, FormStateInterface $form_state) {

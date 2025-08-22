@@ -1,8 +1,21 @@
-role_based_registration.register:
-  path: '/role-register'
+role_based_registration.profile_completion:
+  path: '/user/{user}/complete-profile'
   defaults:
-    _form: '\Drupal\role_based_registration\Form\RoleBasedRegisterForm'
-    _title: 'Role Based Registration'
+    _title: 'Complete Your Profile'
+    _form: '\Drupal\role_based_registration\Form\ProfileCompletionForm'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\role_based_registration\Form\ProfileCompletionForm::access'
+  options:
+    _admin_route: FALSE
 
+role_based_registration.business_form:
+  path: '/user/{user}/business-registration'
+  defaults:
+    _form: '\Drupal\role_based_registration\Form\BusinessRegistrationForm'
+    _title: 'Business Registration'
+  requirements:
+    _custom_access: '\Drupal\role_based_registration\Form\BusinessRegistrationForm::access'
+  options:
+    parameters:
+      user:
+        type: entity:user

@@ -32,6 +32,11 @@ function review_likes_theme_suggestions_form_alter(array &$suggestions, array $v
     // Add a custom template suggestion.
     $suggestions[] = 'form__role_based_register_form';
   }
+
+   if ($form_id === 'profile_completion_form') {
+    // Add a custom template suggestion.
+    $suggestions[] = 'form__profile_completion_form';
+  }
 }
 
 

@@ -21,9 +21,11 @@ module:
   content_entity_clone: 0
   content_sync: 0
   contextual: 0
+  country: 0
   custom_likes: 0
   datetime: 0
   dblog: 0
+  dynamic_entity_reference: 0
   dynamic_page_cache: 0
   editor: 0
   entity: 0
@@ -39,6 +41,8 @@ module:
   link_attributes: 0
   menu_link_content: 0
   menu_ui: 0
+  mobile_number: 0
+  mobile_otp: 0
   node: 0
   node_to_pdf: 0
   options: 0
@@ -49,13 +53,18 @@ module:
   quick_node_clone: 0
   range: 0
   redirect_after_login: 0
+  role_based_registration: 0
   search: 0
   serialization: 0
   shortcut: 0
+  sms: 0
+  sms_sendtophone: 0
+  sms_user: 0
   smtp: 0
   svg_image: 0
   system: 0
   taxonomy: 0
+  telephone: 0
   text: 0
   token: 0
   toolbar: 0

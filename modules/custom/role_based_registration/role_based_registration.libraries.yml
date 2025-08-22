@@ -2,10 +2,9 @@ registration_form:
   version: 1.x
   css:
    theme:
-    css/registration.css: {}
+    css/merchantregistration.css: {}
     css/bootstrap-icons.css: {}
     css/bootstrap.min.css: {}
-    css/signup.css: {}
   js:
     js/registration.js: {}
   dependencies:

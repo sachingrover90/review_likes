@@ -88,28 +88,28 @@
           return;
         }
 
-        console.log('[15] Sending OTP verification request');
+        // console.log('[15] Sending OTP verification request');
      $.ajax({
           url: '/otp/verify',
           type: 'POST',
           data: { email: email, otp: otp },
           success: function(response) {
-            console.log('[16] OTP verification response:', response);
+            // console.log('[16] OTP verification response:', response);
             
             if (response.status === 'verified') {
               alert('OTP verified successfully');
               $('#otp-verification-modal').modal('hide');
-              console.log('[18] Modal hidden. Reloading page...');
+              // console.log('[18] Modal hidden. Reloading page...');
               document.getElementById('user-register-form').submit();
               
               // window.location.reload();
             } else {
-              console.warn('[19] OTP verification failed:', response.status);
+              // console.warn('[19] OTP verification failed:', response.status);
               alert('OTP verification failed: ' + response.status);
             }
           },
           error: function(xhr, status, error) {
-            console.error('[ERROR] OTP verification failed:', status, error);
+            // console.error('[ERROR] OTP verification failed:', status, error);
           }
         });
       });

@@ -10,6 +10,7 @@ global-styling:
       css/common.css: {}
       css/home.css: {}
       css/custom.css: {}
+      css/merchantregistration.css: {}
       
 
   js:
