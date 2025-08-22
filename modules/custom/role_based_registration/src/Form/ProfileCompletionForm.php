@@ -43,7 +43,7 @@ class ProfileCompletionForm extends FormBase {
     elseif ($this->role === 'game_changer') {
       $form['game_changer_info'] = [
         '#type' => 'fieldset',
-        '#title' => $this->t('Game Changer Information'),
+        '#title' => $this->t('<h2 class="text-center mb-4">Game Changer Registration Form</h2>'),
       ];
       // Add game changer specific fields here if needed
     }
@@ -57,12 +57,11 @@ class ProfileCompletionForm extends FormBase {
         ],
     ];
 
-
     // First Name (editable)
     $form['personal_info']['first_name'] = [
       '#prefix' => ' <div class="col-md-6">',
        'label' => [
-            '#markup' => '<label for="fname" class="required mb-2">First Name</label>',
+            '#markup' => '',
         ],  
       '#type' => 'textfield',
       '#title' => $this->t('First Name'),
@@ -214,9 +213,12 @@ $form['contact_info']['country'] = [
       '#type' => 'actions',
     ];
     $form['actions']['submit'] = [
+      // '#prefix' => '<div class="col-md-2 mt-2">',
       '#type' => 'submit',
+      '#attributes' => ['class' => ['btn', 'btn-default', 'mt-3']],
       '#value' => $this->t('Complete Profile'),
       '#button_type' => 'primary',
+      // '#suffix' => '</div>',
     ];
  $form['#attached']['library'][] = 'mobile_otp/otp-verification';
     return $form;
@@ -333,7 +335,7 @@ protected function getLanguageOptions() {
     $this->user->set('field_last_name', $form_state->getValue('last_name'));
     $this->user->set('field_country', $form_state->getValue('country'));
     $this->user->set('field_language', $form_state->getValue('language'));
-    $this->user->set('field_phone', $form_state->getValue('phone'));
+    // $this->user->set('field_phone', $form_state->getValue('phone'));
      $mobile_number_util = \Drupal::service('mobile_number.util');
   $mobile_value = $form_state->getValue('mobile');
   

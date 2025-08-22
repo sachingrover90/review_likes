@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\user\UserInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
@@ -150,5 +153,27 @@ function mobile_otp_page_attachments(array &$attachments) {
 function mobile_otp_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
   if ($form_id == 'profile-completion-form') { // Replace with your actual form ID
     $form['#attached']['library'][] = 'mobile_otp/otp-verification';
+  }
+}
+
+
+/**
+ * Implements hook_user_login().
+ */
+function mobile_otp_user_login(UserInterface $account) {
+  // Only redirect if profile completion is required.
+  if ($account->hasRole('merchant') || $account->hasRole('game_changer') ) {
+    $current_request = \Drupal::service('request_stack')->getCurrentRequest();
+
+    // Avoid overriding if a destination is already set.
+    if (!$current_request->query->get('destination')) {
+      // Build the URL to your route.
+      $url = Url::fromRoute('role_based_registration.profile_completion', [
+        'user' => $account->id(),
+      ], ['absolute' => TRUE])->toString();
+
+      // Set it as the destination.
+      $current_request->query->set('destination', $url);
+    }
   }
 }
