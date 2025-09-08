@@ -97,72 +97,100 @@ class ProductForm extends FormBase {
 
 
     // === Online Selling Platforms Section ===
-    $form['platforms_wrapper'] = [
-      '#type' => 'container',
-      '#attributes' => ['id' => 'platforms-wrapper'],
-      '#prefix' => '<div class="row justify-content-center"><div id="platforms-wrapper"> <div class="row justify-content-center"> <div class="col-md-10"><div class="mb-3 adminplatform"> <div class="platform-wrapper"> <div class="row">',
-      '#suffix' => '</div> </div> </div> </div></div></div>',
+$form['platforms_wrapper'] = [
+  '#type' => 'container',
+  '#attributes' => ['id' => 'platforms-wrapper'],
+  '#prefix' => '<div class="row justify-content-center"><div id="platforms-wrapper"> <div class="row justify-content-center"> <div class="col-md-10"><div class="mb-3 adminplatform"> <div class="platform-wrapper">',
+  '#suffix' => '</div> </div> </div> </div></div>',
+];
+
+foreach ($platform_items as $delta) {
+  // Create a row container for each platform
+  $form['platforms_wrapper']['platforms'][$delta] = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['row', 'mb-2', 'platform-row']],
+    '#prefix' => '<div class="row platform-wrapper mt-3">',
+    '#suffix' => '</div>',
+  ];
+    $form['platforms_wrapper']['platforms'][$delta]['title'] = [
+      '#markup' => '<h5 class="required mb-3">Online Selling Platforms (links)</h5>',
+      '#title_display' => 'after',
     ];
-    
-    foreach ($platform_items as $delta) {
-      $form['platforms_wrapper']['platforms'][$delta] = [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['row', 'mb-2']],
-      ];
 
-      $form['platforms_wrapper']['platforms'][$delta]['link'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Online Selling Platforms (links)'),
-        '#attributes' => ['placeholder' => 'add more link same product'],
-        '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'link']),
-      ];
+  // Link field
+  $form['platforms_wrapper']['platforms'][$delta]['link'] = [
+    '#type' => 'textfield',
+    // '#title' => $this->t('Online Selling Platforms (links)'),
+    '#required' => TRUE,
+    '#attributes' => ['placeholder' => 'add more link same product', 'class' => ['form-control me-4']],
+    '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'link']),
+    '#prefix' => '<div class="col-md-5">',
+    '#suffix' => '</div>',
+  ];
 
-      $form['platforms_wrapper']['platforms'][$delta]['price'] = [
-        '#type' => 'textfield',
-        // '#title' => $this->t('Price'),
-        '#attributes' => ['placeholder' => 'Price'],
-        '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'price']),
-      ];
+  // Price field
+  $form['platforms_wrapper']['platforms'][$delta]['price'] = [
+    '#type' => 'textfield',
+    '#attributes' => ['placeholder' => 'Price', 'class' => ['form-control me-4']],
+    '#required' => TRUE,
+    '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'price']),
+    '#prefix' => '<div class="col-md-3">',
+    '#suffix' => '</div>',
+  ];
 
-      $form['platforms_wrapper']['platforms'][$delta]['coupon'] = [
-        '#type' => 'textfield',
-        // '#title' => $this->t('Coupon Code'),
-        '#attributes' => ['placeholder' => 'Coupon Code'],
-        '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'coupon']),
-      ];
+  // Coupon field
+  $form['platforms_wrapper']['platforms'][$delta]['coupon'] = [
+    '#type' => 'textfield',
+    '#attributes' => ['placeholder' => 'Coupon Code', 'class' => ['form-control me-4']],
+    '#required' => TRUE,
+    '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'coupon']),
+    '#prefix' => '<div class="col-md-3">',
+    '#suffix' => '</div>',
+  ];
 
-      // Remove button (only if more than one row)
-      if (count($platform_items) > 1) {
-        $form['platforms_wrapper']['platforms'][$delta]['remove'] = [
-          '#type' => 'submit',
-          '#value' => $this->t('Remove'),
-          '#submit' => ['::removePlatformSubmit'],
-          '#ajax' => [
-            'callback' => '::ajaxCallback',
-            'wrapper' => 'platforms-wrapper',
-          ],
-          '#name' => 'remove-' . $delta,
-          '#limit_validation_errors' => [],
-          '#attributes' => ['class' => ['button--danger']],
-        ];
-      }
-    }
-
-    // Add button
-    $form['platforms_wrapper']['add'] = [
+  // Remove button (only if more than one row)
+  if (count($platform_items) > 1) {
+    $form['platforms_wrapper']['platforms'][$delta]['remove'] = [
       '#type' => 'submit',
-      '#value' => $this->t('+ Add Platform Link'),
-      '#submit' => ['::addPlatformSubmit'],
+      '#value' => $this->t('Remove'),
+      '#submit' => ['::removePlatformSubmit'],
       '#ajax' => [
         'callback' => '::ajaxCallback',
         'wrapper' => 'platforms-wrapper',
       ],
+      '#name' => 'remove-' . $delta,
       '#limit_validation_errors' => [],
-      '#attributes' => ['class' => ['button--primary']],
+      '#attributes' => ['class' => ['button--danger', 'remove-platform-btn', 'btn danger remove-btn']],
+      '#prefix' => '<div class="col-md-1">',
+      '#suffix' => '</div>',
     ];
-     $form['platforms_wrapper']['add_platform']['hint'] = [
-      '#markup' => '<span class="hint mt-2 mb-3">Add up to 20 Platform Links you operate under.</span>',
+  } else {
+    // Add empty column for alignment when no remove button
+    $form['platforms_wrapper']['platforms'][$delta]['empty'] = [
+      '#markup' => '<div class="col-md-1"></div>',
     ];
+  }
+}
+
+// Add button
+$form['platforms_wrapper']['add'] = [
+  '#type' => 'submit',
+  '#value' => $this->t('+ Add Platform Link'),
+  '#submit' => ['::addPlatformSubmit'],
+  '#ajax' => [
+    'callback' => '::ajaxCallback',
+    'wrapper' => 'platforms-wrapper',
+  ],
+  '#limit_validation_errors' => [],
+  '#attributes' => ['class' => ['button--primary', 'add-platform-btn', 'btn addPlatformBtn mt-2']],
+];
+
+// Hint text
+$form['platforms_wrapper']['hint'] = [
+  '#markup' => '<div class="row"><div class="col-md-12 text-center"><span class="hint mt-2 mb-3">Add up to 20 Platform Links you operate under.</span></div></div>',
+  '#prefix' => '<div class="row"><div class="col-md-12 text-center">',
+  '#suffix' => '</div></div>',
+];
 
     // === Product Fields ===
 

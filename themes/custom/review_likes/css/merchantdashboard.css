@@ -457,3 +457,10 @@ div#ajax-wrapper {
     flex: 0 0 auto;
     width: 41.66666667%;
 }
+
+h5.required::after
+ {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
