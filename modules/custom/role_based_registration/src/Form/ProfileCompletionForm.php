@@ -364,10 +364,15 @@ protected function getLanguageOptions() {
 
     // Save user
     $this->user->save();
-
-    // Redirect to user profile
+if ($this->user->hasRole('merchant')) {
+    $form_state->setRedirect('role_based_registration.product_form');
+  }
+    else {
+    // Optional: redirect others to profile or homepage
     // $form_state->setRedirect('entity.user.canonical', ['user' => $this->user->id()]);
-     $form_state->setRedirect('<current>');
+    // OR
+    $form_state->setRedirect('<current>');
+  }
 
     $this->messenger()->addStatus($this->t('Your profile has been completed successfully.'));
   }
