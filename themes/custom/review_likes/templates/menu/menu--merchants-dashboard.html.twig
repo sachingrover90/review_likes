@@ -27,23 +27,27 @@
   https://twig.symfony.com/doc/3.x/tags/macro.html
 #}
 {{ menus.menu_links(items, attributes, 0) }}
-
 {% macro menu_links(items, attributes, menu_level) %}
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
       <ul{{ attributes }}>
     {% else %}
-     <nav>
-      <ul>
+      <nav>
+        <ul>
     {% endif %}
    
       {% for item in items %}
-      <li class="nav-btn" data-view="{{item.url}}"> <a href="{{item.url}}"> {{ item.title }}</a></li>
-        {#{ link(item.title, item.url) }#}      
-    {% endfor %}
-     </ul>
-    </nav>
+        <li class="nav-btn{{ item.in_active_trail ? ' active' : '' }}">
+          <a href="{{ item.url }}">{{ item.title }}</a>
+        </li>
+      {% endfor %}
+     
+      </ul>
+    {% if menu_level != 0 %}
+      </nav>
+    {% endif %}
   {% endif %}
 {% endmacro %}
+
 
