@@ -1,9 +1,12 @@
 uuid: 14ecfcfb-281a-4225-b702-b4b8790e730d
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - role_based_registration
 id: merchant
 label: Merchants
 weight: 4
 is_admin: false
-permissions: {  }
+permissions:
+  - 'create product content'

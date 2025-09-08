@@ -5,3 +5,9 @@ role_based_registration.business_form:
     user: 'user.uid'
   menu_name: user-account-menu
   weight: 100
+
+# role_based_registration.product_form:
+#   title: 'Create Product'
+#   route_name: role_based_registration.product_form
+#   menu_name: main
+#   weight: 101  

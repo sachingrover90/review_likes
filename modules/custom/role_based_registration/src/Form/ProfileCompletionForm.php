@@ -23,6 +23,7 @@ class ProfileCompletionForm extends FormBase {
   public static function access(AccountInterface $account, UserInterface $user = NULL) {
     // Check if current user can edit this profile
     return AccessResult::allowedIf($account->id() == $user->id());
+    
   }
 
   public function buildForm(array $form, FormStateInterface $form_state, UserInterface $user = NULL) {
@@ -46,6 +47,13 @@ class ProfileCompletionForm extends FormBase {
         '#title' => $this->t('<h2 class="text-center mb-4">Game Changer Registration Form</h2>'),
       ];
       // Add game changer specific fields here if needed
+    }
+      elseif ($this->role === 'tester') {
+      $form['tester_info'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('<h2 class="text-center mb-4">Tester Registration Form</h2>'),
+      ];
+      // Add Tester specific fields here if needed
     }
 
     // Personal Information Section - Only email disabled
@@ -235,14 +243,14 @@ $form['contact_info']['country'] = [
     return !empty($roles) ? reset($roles) : 'authenticated';
   }
 
-  protected function getCountryOptions() {
-    return [
-      'us' => $this->t('United States'),
-      'uk' => $this->t('United Kingdom'),
-      'ca' => $this->t('Canada'),
-      'in' => $this->t('India'),
-    ];
-  }
+  // protected function getCountryOptions() {
+  //   return [
+  //     'us' => $this->t('United States'),
+  //     'uk' => $this->t('United Kingdom'),
+  //     'ca' => $this->t('Canada'),
+  //     'in' => $this->t('India'),
+  //   ];
+  // }
 
 
 public function validateForm(array &$form, FormStateInterface $form_state) {

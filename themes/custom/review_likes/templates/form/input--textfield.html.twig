@@ -12,7 +12,25 @@
  {% set updated_attributes = updated_attributes.addClass('form-control mb-3') %}
  {% elseif "edit-role-fields-user-details-first-name" in id or "edit-role-fields-user-details-last-name" in id %}
  <input{{ attributes.removeAttribute('class') }} class="form-control mb-3" />
+ {% elseif element_id == 'edit-platforms-wrapper-platforms-0-link' %}
+ <div class="col-md-6">
+                                          <div class="platform-section" id="adminplatformSection-1">
+                                             <div class="d-flex storelink-section">
+ <input{{ attributes.addClass('form-control me-4') }} />
+{{ children }}
+                                             </div></div></div>
+ {% elseif element_id == 'edit-platforms-wrapper-platforms-0-price' %}
+ <div class="col-md-2">
+ <input{{ attributes.addClass('form-control me-4') }} />
+{{ children }}
+ </div>
+ {% elseif element_id == 'edit-platforms-wrapper-platforms-0-coupon' %}
+ <div class="col-md-4">
+ <input{{ attributes.addClass('form-control me-4')}} />
+{{ children }}
+ </div>
 {% else %}
+{# {{ dump(element['#id']) }} #}
 <input{{ attributes }} />
 {{ children }}
 {% endif %}

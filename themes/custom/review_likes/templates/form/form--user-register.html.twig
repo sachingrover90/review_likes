@@ -104,4 +104,50 @@
       }
     })
   </script>
+
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('edit-field-phone-number-0-value');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            
+            // Function to validate phone number
+            function validatePhoneNumber() {
+                // Remove any non-digit characters
+                let phoneNumber = phoneInput.value.replace(/\D/g, '');
+                
+                // Update the input value with only digits
+                phoneInput.value = phoneNumber;
+                
+                // Check if the phone number is exactly 10 digits
+                if (phoneNumber.length === 10) {
+                    phoneInput.classList.remove('error');
+                    errorMessage.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    return true;
+                } else {
+                    phoneInput.classList.add('error');
+                    // errorMessage.style.display = 'block';
+                    // successMessage.style.display = 'none';
+                    return false;
+                }
+            }
+            
+            // Validate on input
+            phoneInput.addEventListener('input', validatePhoneNumber);
+            
+            // Validate on blur
+            phoneInput.addEventListener('blur', validatePhoneNumber);
+            
+            // Validate on form submission (example)
+            document.querySelector('form')?.addEventListener('submit', function(e) {
+                if (!validatePhoneNumber()) {
+                    e.preventDefault();
+                    phoneInput.focus();
+                }
+            });
+        });
+    </script>
+
+    
 </div>

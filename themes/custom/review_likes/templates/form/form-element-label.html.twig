@@ -65,7 +65,20 @@
   'edit-language',
   'edit-email',
   'edit-mobile-country-code',
-  'edit-mobile-mobile'
+  'edit-mobile-mobile',
+  'edit-platforms-wrapper-platforms-0-price',
+  'edit-platforms-wrapper-platforms-0-link',
+  'edit-platforms-wrapper-platforms-0-coupon',
+  'edit-affiliated-link',
+  'edit-title',
+  'edit-sold-by',
+  'edit-tests-done',
+  'edit-keywords',
+  'edit-rating',
+  'edit-price',
+  'edit-description',
+  'edit-image--label'
+
 ] %}
 
 {% if element_id in allowed_ids %}
@@ -73,7 +86,9 @@
     {{ element['#title'] }}
   </label>
 {% endif %}
-
+ {# <label for="{{ element['#id'] }}" class="required mb-2">
+ {{ element['#title'] }}
+  </label> #}
   {% if label_display in ['before', 'invisible'] %}
     {{ label }}
   {% endif %}

@@ -30,8 +30,18 @@
   {% set updated_attributes = attributes.addClass('form-control mb-3').setAttribute('placeholder', 'Confirm Password') %}
   <input{{ updated_attributes }}/>
   {{ children }}
-
+{% elseif form_id == 'edit-platforms-wrapper-add' %}
+<div class="row ms-1 mt-2">
+ <input{{ attributes.addClass('btn addPlatformBtn mt-2') }}/>
+  {{ children }}
+</div>
+{% elseif form_id == 'edit-image-upload' or form_id == 'edit-image-upload-button' or form_id == 'edit-image-fids' %}
+  {# <div class="col-md-5 mb-3"> #}
+    <input{{ attributes.addClass('form-control') }} />
+    {{ children }}
+  {# </div> #}
 {% else %}
+{# {{ dump(element['#id']) }} #}
   <input{{ attributes.addClass('course') }}/>
   {{ children }}
 {% endif %}
