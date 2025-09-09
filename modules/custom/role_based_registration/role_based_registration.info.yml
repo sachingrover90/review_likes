@@ -5,3 +5,5 @@ core_version_requirement: ^10
 package: Custom
 dependencies:
   - telephone
+  - drupal:node
+  - drupal:file

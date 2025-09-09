@@ -9,11 +9,35 @@ use Drupal\file\Entity\File;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
-use Drupal\user\Entity\User;
-use Drupal\Core\Url;
-use Drupal\user\UserInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\File\FileSystemInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ProductForm extends FormBase {
+
+     /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = new static();
+    $instance->messenger = $container->get('messenger');
+    $instance->fileSystem = $container->get('file_system');
+    return $instance;
+  }
 
   public function getFormId() {
     return 'role_based_registration_product_form';
@@ -50,34 +74,26 @@ class ProductForm extends FormBase {
     $form['extract_section']['title'] = [
       '#markup' => '<h3 class="mb-4 text-center">Extract Product Details From Platform</h3>',
     ];
-
-    $form['extract_section']['link_container'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['row', 'justify-content-center', 'align-items-baseline', 'mb-3']],
-      '#prefix' => '<div class="row justify-content-center">',
-    ];
-
-    $form['extract_section']['link_container']['elink'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Provide the link'),
-      '#title_display' => 'invisible',
-      '#attributes' => [
-        'class' => ['form-control'],
-        'placeholder' => 'Provide the link',
-      ],
-      '#prefix' => '<div class="col-md-6 mb-3">',
+  $form['elink'] = [
+  '#type' => 'textfield',
+  '#title' => $this->t('Product URL'),
+   '#attributes' => [ 'placeholder' => 'Provide the link','class' => ['row', 'justify-content-center', 'align-items-baseline', 'mb-3']], 
+//   '#required' => TRUE,
+      '#prefix' => '<div class="row justify-content-center"><div class="col-md-6 mb-3">',
       '#suffix' => '</div>',
-    ];
+];
 
-    $form['extract_section']['link_container']['extract_button'] = [
-      '#type' => 'button',
-      '#value' => $this->t('Extract Data'),
-      '#attributes' => ['class' => ['btn', 'btn-default']],
-      '#prefix' => '<div class="col-md-2">',
+    $form['extract_button'] = [
+  '#type' => 'submit',
+  '#value' => $this->t('Extract Data'),
+  '#submit' => ['::redirectToController'],
+  '#limit_validation_errors' => [['elink']],
+  '#attributes' => ['class' => ['btn', 'btn-default']],
+  '#prefix' => '<div class="col-md-2">',
       '#suffix' => '</div>',
-    ];
+];
 
-    $form['extract_section']['hint'] = [
+    $form['hint'] = [
       '#markup' => '<span class="g-title text-center"><i>Please provide the Amazon, ebay, flipkart links only to extract product data</i></span>',
      '#suffix' => '</div>',
     ];
@@ -429,9 +445,25 @@ $form['platforms_wrapper']['hint'] = [
 
     $node->save();
     $this->messenger()->addMessage($this->t('Product %title created successfully.', ['%title' => $node->label()]));
+     $form_state->setRedirect('<current>');
   }
 
+ public function redirectToController(array &$form, FormStateInterface $form_state) {
+  $url = $form_state->getValue('elink');   // ✅ must match the field name
 
+  if (!empty($url)) {
+    $form_state->setRedirect(
+      'role_based_registration.extract_product',
+      [],
+      ['query' => ['url' => $url]]
+    );
+    \Drupal::logger('debug')->notice('<pre>@data</pre>', ['@data' => print_r($form_state->getValues(), TRUE)]);
+
+  }
+  else {
+    $this->messenger()->addError($this->t('Please enter a product URL.'));
+  }
+}
  /**
    * Get user's primary role.
    */

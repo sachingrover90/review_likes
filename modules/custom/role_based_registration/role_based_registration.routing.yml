@@ -30,13 +30,14 @@ role_based_registration.user_list:
 # role_based_registration.product_form:
 #   path: '/product/create'
 #   defaults:
+#     _title: 'Import Product'
 #     _form: '\Drupal\role_based_registration\Form\ProductForm'
-#     _title: 'Create Product'
 #   requirements:
-#     _permission: 'access content'
-#     _custom_access: '\Drupal\role_based_registration\Form\ProductForm::access'
-#   options:
-#     _admin_route: FALSE
+#     # Replace the _custom_access line with a simple permission check.
+#     # Use 'administer nodes' or create a custom permission in your module.
+#       _custom_access: '\Drupal\role_based_registration\Form\ProductForm::access'
+#     # OR, if you want anyone to access it (not recommended for admin tasks):
+#     # _access: 'TRUE'
 
 role_based_registration.product_form:
   path: '/product/create'
@@ -49,3 +50,10 @@ role_based_registration.product_form:
     _custom_access: '\Drupal\role_based_registration\Form\ProductForm::access'
   options:
     _admin_route: FALSE
+role_based_registration.extract_product:
+  path: '/extract-product'
+  defaults:
+    _controller: '\Drupal\role_based_registration\Controller\ProductController::extractProduct'
+    _title: 'Extract Product'
+  requirements:
+    _permission: 'access content'
