@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 
+
+
 class ProductController extends ControllerBase {
 
   protected $fileSystem;
@@ -34,6 +36,8 @@ class ProductController extends ControllerBase {
     if (empty($url)) {
       $this->messenger()->addError($this->t('No product URL provided.'));
       return $this->redirect('<front>');
+      \Drupal::logger('debug')->notice('<pre>@data</pre>', ['@data' => print_r($form_state->getValues(), TRUE)]);
+
     }
 
     try {
@@ -42,10 +46,10 @@ class ProductController extends ControllerBase {
       $this->messenger()->addStatus($this->t('Product "%title" imported successfully!', [
         '%title' => $node->label(),
       ]));
-      
-      // Redirect to product form route
-      $redirectUrl = Url::fromRoute('role_based_registration.product_form')->toString();
-      return new RedirectResponse($redirectUrl);
+ // Redirect to product form route
+  $redirectUrl = Url::fromRoute('role_based_registration.product_form')->toString();
+  return new RedirectResponse($redirectUrl);
+    //   return new RedirectResponse($node->toUrl()->toString());
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('Extraction failed: @msg', ['@msg' => $e->getMessage()]));
@@ -53,183 +57,240 @@ class ProductController extends ControllerBase {
     }
   }
 
-  private function extractProductData($url) {
-    // Extract external_id
-    preg_match('/\/dp\/([A-Z0-9]{10})/', $url, $matches);
-    $external_id = $matches[1] ?? md5($url); // fallback for Flipkart
 
-    if (empty($external_id)) {
-      throw new \Exception('Could not extract product ID from the URL.');
-    }
+private function extractProductData($url) {
+  // Extract external_id
+  preg_match('/\/dp\/([A-Z0-9]{10})/', $url, $matches);
+  $external_id = $matches[1] ?? md5($url); // fallback for Flipkart
 
-    // Check duplicate
-    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-      'type' => 'marchant_products',
-      'field_external_id' => $external_id,
-    ]);
-    if (!empty($nodes)) {
-      throw new \Exception('This product already exists in the system.');
-    }
-
-    // Validate domain
-    if (!preg_match('/amazon\.in|flipkart\.com/', $url)) {
-      throw new \Exception('Currently, only Amazon.in and Flipkart.com are supported.');
-    }
-
-    // Fetch page with proper headers to avoid 403 errors
-    $client = \Drupal::httpClient();
-    
-    // Use realistic browser headers
-    $headers = [
-      'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-      'Accept-Language' => 'en-US,en;q=0.9',
-      'Accept-Encoding' => 'gzip, deflate, br',
-      'Connection' => 'keep-alive',
-      'Upgrade-Insecure-Requests' => '1',
-      'Sec-Fetch-Dest' => 'document',
-      'Sec-Fetch-Mode' => 'navigate',
-      'Sec-Fetch-Site' => 'none',
-      'Sec-Fetch-User' => '?1',
-      'Cache-Control' => 'max-age=0',
-    ];
-
-    // Add specific referer for each site
-    if (strpos($url, 'amazon.in') !== FALSE) {
-      $headers['Referer'] = 'https://www.amazon.in/';
-    } else if (strpos($url, 'flipkart.com') !== FALSE) {
-      $headers['Referer'] = 'https://www.flipkart.com/';
-    }
-
-    try {
-      $response = $client->request('GET', $url, [
-        'headers' => $headers,
-        'allow_redirects' => [
-          'max' => 5,
-          'strict' => true,
-          'referer' => true,
-          'protocols' => ['http', 'https'],
-        ],
-        'timeout' => 30,
-        // Note: verify should generally be true for security, but some sites may require false
-        'verify' => true,
-      ]);
-      
-      // Check if response is successful
-      if ($response->getStatusCode() !== 200) {
-        throw new \Exception('Failed to fetch product page. HTTP status: ' . $response->getStatusCode());
-      }
-      
-      $html = (string) $response->getBody();
-
-    } catch (\Exception $e) {
-      throw new \Exception('Failed to fetch product page: ' . $e->getMessage());
-    }
-
-    // Check if HTML contains anti-bot measures
-    if (strpos($html, 'captcha') !== false || strpos($html, 'robot') !== false || strpos($html, 'access denied') !== false) {
-      throw new \Exception('Website blocked the request. Please try again later or use a different approach.');
-    }
-
-    $dom = new \DOMDocument();
-    @$dom->loadHTML($html);
-    $xpath = new \DOMXPath($dom);
-
-    $title = '';
-    $price = 0;
-    $description = '';
-    $soldBy = '';
-    $fid = NULL;
-
-    if (strpos($url, 'amazon.in') !== FALSE) {
-      // === Amazon selectors ===
-      $titleNode = $xpath->query("//span[@id='productTitle']");
-      $title = $titleNode->length ? trim($titleNode->item(0)->nodeValue) : 'Untitled Product';
-
-      $priceNode = $xpath->query("//span[@class='a-price-whole']");
-      $price = $priceNode->length ? preg_replace('/[^0-9.]/', '', $priceNode->item(0)->nodeValue) : 0;
-
-      $descNode = $xpath->query("//div[@id='feature-bullets']//span[@class='a-list-item']");
-      foreach ($descNode as $item) {
-        $description .= trim($item->nodeValue) . "\n";
-      }
-
-      $sellerNode = $xpath->query("//a[@id='bylineInfo']");
-      $soldBy = $sellerNode->length ? trim($sellerNode->item(0)->nodeValue) : 'Unknown Seller';
-
-      $imageNode = $xpath->query("//img[@id='landingImage']");
-      $imageUrl = $imageNode->length ? $imageNode->item(0)->getAttribute('src') : '';
-    }
-    else {
-      // === Flipkart selectors ===
-      $titleNode = $xpath->query("//span[@class='B_NuCI']");
-      $title = $titleNode->length ? trim($titleNode->item(0)->nodeValue) : 'Untitled Product';
-
-      $priceNode = $xpath->query("//div[@class='_30jeq3 _16Jk6d']");
-      $price = $priceNode->length ? preg_replace('/[^0-9.]/', '', $priceNode->item(0)->nodeValue) : 0;
-
-      $descNode = $xpath->query("//div[@class='_1mXcCf RmoJUa']//p");
-      foreach ($descNode as $item) {
-        $description .= trim($item->nodeValue) . "\n";
-      }
-
-      $sellerNode = $xpath->query("//div[@id='sellerName']//span//span");
-      $soldBy = $sellerNode->length ? trim($sellerNode->item(0)->nodeValue) : 'Unknown Seller';
-
-      $imageNode = $xpath->query("//img[@class='_396cs4 _2amPTt _3qGmMb  _3exPp9']");
-      if ($imageNode->length === 0) {
-        $imageNode = $xpath->query("//img[@class='_396cs4 _2amPTt _3qGmMb']");
-      }
-      $imageUrl = $imageNode->length ? $imageNode->item(0)->getAttribute('src') : '';
-    }
-
-    // Save image
-    if (!empty($imageUrl)) {
-      try {
-        // Use Drupal's HTTP client for image download too
-        $imageResponse = $client->request('GET', $imageUrl, [
-          'headers' => [
-            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer' => $url,
-          ],
-          'timeout' => 15,
-        ]);
-        
-        if ($imageResponse->getStatusCode() === 200) {
-          $imageData = (string) $imageResponse->getBody();
-          $filename = 'product-' . $external_id . '-' . basename(parse_url($imageUrl, PHP_URL_PATH));
-          
-          $fileRepository = \Drupal::service('file.repository');
-          $file = $fileRepository->writeData(
-            $imageData,
-            'public://product-images/' . $filename,
-            FileSystemInterface::EXISTS_RENAME
-          );
-          
-          if ($file) {
-            $fid = $file->id();
-          }
-        }
-      } catch (\Exception $e) {
-        // Continue without image if download fails
-        \Drupal::logger('role_based_registration')->warning('Failed to download product image: ' . $e->getMessage());
-      }
-    }
-
-    // Create node
-    $node = Node::create([
-      'type'  => 'marchant_products',
-      'title' => $title,
-      'field_product_url' => $url,
-      'field_price' => $price,
-      'body'  => $description,
-      'field_external_id' => $external_id,
-      'field_sold_bys' => $soldBy,
-      'field_image' => $fid ? ['target_id' => $fid] : NULL,
-      'status' => 1,
-    ]);
-    $node->save();
-
-    return $node;
+  if (empty($external_id)) {
+    throw new \Exception('Could not extract product ID from the URL.');
   }
+
+  // Check duplicate
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+    'type' => 'marchant_products',
+    'field_external_id' => $external_id,
+  ]);
+  if (!empty($nodes)) {
+    throw new \Exception('This product already exists in the system.');
+  }
+
+  // Validate domain
+  if (!preg_match('/amazon\.in|flipkart\.com/', $url)) {
+    throw new \Exception('Currently, only Amazon.in and Flipkart.com are supported.');
+  }
+
+  // Fetch page
+  $client = \Drupal::httpClient();
+  $response = $client->request('GET', $url, [
+    'headers' => ['User-Agent' => 'Mozilla/5.0'],
+    'headers' => [
+    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language' => 'en-US,en;q=0.9',
+    'Referer' => 'https://www.flipkart.com/',
+    'Cookie' => 'SESSbce6192f9c85846f7f11b345aa5abc44=tBxrUCHeBpvlntZtgrEkXa2MKNvEL-2i5SlLmACPwNyYGKEe',
+  ],
+  'allow_redirects' => TRUE,
+  'timeout' => 30,
+// ]);
+  ]);
+  $html = (string) $response->getBody();
+
+  $dom = new \DOMDocument();
+  @$dom->loadHTML($html);
+  $xpath = new \DOMXPath($dom);
+
+  $title = '';
+  $price = 0;
+  $description = '';
+  $soldBy = '';
+  $fid = NULL;
+
+  if (strpos($url, 'amazon.in') !== FALSE) {
+    // === Amazon selectors ===
+    $titleNode = $xpath->query("//span[@id='productTitle']");
+    $title = $titleNode->length ? trim($titleNode->item(0)->nodeValue) : 'Untitled Product';
+
+    $priceNode = $xpath->query("//span[@class='a-price-whole']");
+    $price = $priceNode->length ? preg_replace('/[^0-9.]/', '', $priceNode->item(0)->nodeValue) : 0;
+
+    $descNode = $xpath->query("//div[@id='feature-bullets']//span[@class='a-list-item']");
+    foreach ($descNode as $item) {
+      $description .= trim($item->nodeValue) . "\n";
+    }
+
+    $sellerNode = $xpath->query("//a[@id='bylineInfo']");
+    $soldBy = $sellerNode->length ? trim($sellerNode->item(0)->nodeValue) : 'Unknown Seller';
+
+    $imageNode = $xpath->query("//img[@id='landingImage']");
+    $imageUrl = $imageNode->length ? $imageNode->item(0)->getAttribute('src') : '';
+  }
+  else {
+    // === Flipkart selectors ===
+    $titleNode = $xpath->query("//span[@class='B_NuCI']");
+    $title = $titleNode->length ? trim($titleNode->item(0)->nodeValue) : 'Untitled Product';
+
+    $priceNode = $xpath->query("//div[@class='_30jeq3 _16Jk6d']");
+    $price = $priceNode->length ? preg_replace('/[^0-9.]/', '', $priceNode->item(0)->nodeValue) : 0;
+
+    $descNode = $xpath->query("//div[@class='_1mXcCf RmoJUa']//p");
+    foreach ($descNode as $item) {
+      $description .= trim($item->nodeValue) . "\n";
+    }
+
+    $sellerNode = $xpath->query("//div[@id='sellerName']//span//span");
+    $soldBy = $sellerNode->length ? trim($sellerNode->item(0)->nodeValue) : 'Unknown Seller';
+
+    $imageNode = $xpath->query("//img[@class='_396cs4 _2amPTt _3qGmMb  _3exPp9']");
+    if ($imageNode->length === 0) {
+      $imageNode = $xpath->query("//img[@class='_396cs4 _2amPTt _3qGmMb']");
+    }
+    $imageUrl = $imageNode->length ? $imageNode->item(0)->getAttribute('src') : '';
+  }
+
+  // Save image
+  if (!empty($imageUrl)) {
+    $imageData = file_get_contents($imageUrl);
+    if ($imageData) {
+      $fileRepository = \Drupal::service('file.repository');
+      $file = $fileRepository->writeData(
+        $imageData,
+        'public://product-images/' . basename(parse_url($imageUrl, PHP_URL_PATH)),
+        FileSystemInterface::EXISTS_REPLACE
+      );
+      if ($file) {
+        $fid = $file->id();
+      }
+    }
+  }
+
+  // Create node
+  $node = Node::create([
+    'type'  => 'marchant_products',
+    'title' => $title,
+    'field_product_url' => $url,
+    'field_price' => $price,
+    'body'  => $description,
+    'field_external_id' => $external_id,
+    'field_sold_bys' => $soldBy,
+    'field_image' => $fid ? ['target_id' => $fid] : NULL,
+    'status' => 1,
+  ]);
+  $node->save();
+
+  return $node;
+}
+
+
+//   /**
+//    * Handle scraping & node creation.
+//    */
+//   private function extractProductData($url) {
+
+
+//     // Extract ASIN (Unique Amazon ID) from the URL.
+// preg_match('/\/dp\/([A-Z0-9]{10})/', $url, $matches);
+// $external_id = $matches[1] ?? '';
+
+// if (empty($external_id)) {
+//   throw new \Exception('Could not extract product ID from the URL.');
+// }
+
+// // Check if product already exists to avoid duplicates.
+// $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
+//   'type' => 'marchant_products',
+//   'field_external_id' => $external_id,
+// ]);
+
+// if (!empty($nodes)) {
+//   // Product already exists, return error.
+//   throw new \Exception('This product already exists in the system.');
+// }
+//     // Example: only Amazon/Flipkart allowed
+//     if (!preg_match('/amazon\.in|flipkart\.com/', $url)) {
+//       throw new \Exception('Currently, only Amazon.in and Flipkart.com are supported.');
+//     }
+
+//     $client = \Drupal::httpClient();
+//     $response = $client->request('GET', $url, [
+//       'headers' => [
+//         'User-Agent' => 'Mozilla/5.0',
+//       ],
+//     ]);
+//     $html = (string) $response->getBody();
+
+//     // === Parse HTML with DOM ===
+//     $dom = new \DOMDocument();
+//     @$dom->loadHTML($html);
+//     $xpath = new \DOMXPath($dom);
+
+//     // Title
+//     $titleNode = $xpath->query("//span[@id='productTitle']");
+//     $title = $titleNode->length ? trim($titleNode->item(0)->nodeValue) : 'Untitled Product';
+
+//     // Price
+//     $priceNode = $xpath->query("//span[@class='a-price-whole']");
+//     $price = $priceNode->length ? preg_replace('/[^0-9.]/', '', $priceNode->item(0)->nodeValue) : 0;
+
+//     // Description
+//     $descNode = $xpath->query("//div[@id='feature-bullets']//span[@class='a-list-item']");
+//     $description = '';
+//     foreach ($descNode as $item) {
+//       $description .= trim($item->nodeValue) . "\n";
+//     }
+
+// // Sold By
+// $sellerNode = $xpath->query("//a[@id='bylineInfo']");
+// $soldBy = $sellerNode->length ? trim($sellerNode->item(0)->nodeValue) : '';
+
+// if (empty($soldBy)) {
+//   $sellerNode = $xpath->query("//a[@id='sellerProfileTriggerId']");
+//   $soldBy = $sellerNode->length ? trim($sellerNode->item(0)->nodeValue) : 'Unknown Seller';
+// }
+// // Image
+// $imageNode = $xpath->query("//img[@id='landingImage']");
+// $imageUrl = $imageNode->length ? $imageNode->item(0)->getAttribute('src') : '';
+
+// if (!empty($imageUrl)) {
+//   $imageData = file_get_contents($imageUrl);
+
+//   if ($imageData) {
+//     $fileRepository = \Drupal::service('file.repository');
+//     $file = $fileRepository->writeData(
+//       $imageData,
+//       'public://product-images/' . basename(parse_url($imageUrl, PHP_URL_PATH)),
+//       FileSystemInterface::EXISTS_REPLACE
+//     );
+
+//     if ($file) {
+//       $fid = $file->id();
+//     }
+//   }
+// }
+
+
+
+//     // $url = $form_state->getValue('elink');
+// if (!empty($url)) {
+//     // === Create node ===
+//     $node = Node::create([
+//       'type'  => 'marchant_products',
+//       'title' => $title,
+//       'field_product_url' =>  $url,
+//       'field_price' => $price,
+//       'body'  => $description,
+//       'field_external_id' => $external_id,
+//       'field_sold_bys' => $soldBy,       // add a text field in your content type
+//         'field_image' => isset($fid) ? [
+//             'target_id' => $fid,
+//         ] : NULL,
+//       'status' => 1,
+//     ]);
+// }
+
+//     $node->save();
+//     return $node;
+//   }
 }
