@@ -10,12 +10,20 @@
  */
 #}
 
- 
- {% if element['#id'] == 'views-exposed-form-product-block-1' %}
-  <form{{ attributes.addclass('w-100') }}>
-  {% else %}
-    <form{{ attributes }}>
-    {% endif %}
+{% set form_id = element['#id'] ?? '' %}
+
+{% if form_id == 'views-exposed-form-product-block-1' %}
+  <form{{ attributes.addClass('w-100') }}>
     {{ children }}
   </form>
- 
+
+{% elseif form_id == 'views-exposed-form-all-products-block-1' %}
+  <form{{ attributes.addClass('input-group') }}>
+    {{ children }}
+  </form>
+
+{% else %}
+  <form{{ attributes }}>
+    {{ children }}
+  </form>
+{% endif %}

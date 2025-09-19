@@ -12,8 +12,10 @@ dependencies:
     - field.field.node.marchant_products.field_price
     - field.field.node.marchant_products.field_prices
     - field.field.node.marchant_products.field_product_url
+    - field.field.node.marchant_products.field_product_variation
     - field.field.node.marchant_products.field_rating
     - field.field.node.marchant_products.field_sold_bys
+    - field.field.node.marchant_products.field_testified_video
     - field.field.node.marchant_products.field_tests_done
     - node.type.marchant_products
   module:
@@ -44,6 +46,8 @@ hidden:
   field_platform_link: true
   field_price: true
   field_product_url: true
+  field_product_variation: true
   field_rating: true
   field_sold_bys: true
+  field_testified_video: true
   field_tests_done: true

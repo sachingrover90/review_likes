@@ -9,7 +9,7 @@ id: node.marchant_products.field_legal_business_name
 field_name: field_legal_business_name
 entity_type: node
 bundle: marchant_products
-label: 'Affiliated Link'
+label: 'Product ID'
 description: ''
 required: false
 translatable: false

@@ -12,3 +12,4 @@ registration_form:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/jquery.once 

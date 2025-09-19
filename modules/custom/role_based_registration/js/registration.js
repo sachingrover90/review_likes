@@ -2,7 +2,7 @@
   Drupal.behaviors.roleBasedRegistration = {
     attach: function(context, settings) {
       // Update checkboxes when select changes
-      $('#custom-role-select', context).once('role-select').change(function() {
+      $('#custom-role-select', context).change(function() {
         var role = $(this).val();
         // Uncheck all role checkboxes
         $('input[name^="roles["]').prop('checked', false);
@@ -13,7 +13,7 @@
       });
       
       // Update select when checkboxes change
-      $('input[name^="roles["]', context).once('role-checkbox').change(function() {
+      $('input[name^="roles["]', context).change(function() {
         if ($(this).is(':checked') && $(this).val() !== 'authenticated') {
           $('#custom-role-select').val($(this).val());
         }
@@ -68,3 +68,79 @@
   };
 
 })(jQuery, Drupal, once);
+
+
+
+
+
+(function ($, Drupal) {
+  Drupal.behaviors.deleteProduct = {
+    attach: function (context, settings) {
+      let nidToDelete = null;
+
+      // Open modal when delete link clicked
+      $(document).on('click', '.delete-product', function (e) {
+        e.preventDefault();
+        nidToDelete = $(this).data('nid');
+        // console.log("🟢 Clicked Delete for Node ID:", nidToDelete);
+        $('#deleteConfirmModal').modal('show');
+      });
+
+      // Confirm delete
+      $(document).on('click', '#confirmDeleteBtn', function () {
+        // console.log("🟢 Confirm delete for Node ID:", nidToDelete);
+
+        if (nidToDelete) {
+                   $.ajax({
+            url: Drupal.url('product/delete-node/' + nidToDelete),
+            type: 'POST',
+            data: { _drupal_ajax: true },
+            success: function () {
+              // console.log("✅ Node deleted successfully:", nidToDelete);
+              $('#deleteConfirmModal').modal('hide');
+              location.reload(); // reload list after deletion
+            },
+            error: function () {
+              console.error("❌ Error deleting product:", nidToDelete);
+              alert('Error deleting product.');
+            }
+          });
+        }
+      });
+    }
+  };
+})(jQuery, Drupal);
+
+
+document.getElementById('edit-product-id').addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Select all rating fields
+  const ratingFields = document.querySelectorAll('.rating-field');
+
+  ratingFields.forEach(function(field) {
+    field.addEventListener('input', function() {
+      // Allow only numbers and commas
+      this.value = this.value.replace(/[^0-9,]/g, '');
+
+      // Optional: remove duplicate commas
+      this.value = this.value.replace(/,+/g, ',');
+
+      // Optional: remove leading or trailing commas
+      this.value = this.value.replace(/^,|,$/g, '');
+    });
+  });
+});
+
+(function ($, Drupal) {
+  Drupal.behaviors.toggleWrapper = {
+    attach: function (context, settings) {
+      console.log('here i am..');
+      $(".toggle-wrapper.mt-3", context).wrapInner('<label class="toggle-switch"></label>');
+    }
+  };
+})(jQuery, Drupal);
+

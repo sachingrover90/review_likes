@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.marchant_products
     - node.type.page
     - taxonomy.vocabulary.tags
   module:
@@ -30,6 +31,7 @@ permissions:
   - 'create page content'
   - 'create terms in tags'
   - 'create url aliases'
+  - 'delete any marchant_products content'
   - 'delete own files'
   - 'delete own page content'
   - 'delete page revisions'

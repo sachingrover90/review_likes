@@ -12,7 +12,10 @@
  {% set updated_attributes = updated_attributes.addClass('form-control mb-3') %}
  {% elseif "edit-role-fields-user-details-first-name" in id or "edit-role-fields-user-details-last-name" in id %}
  <input{{ attributes.removeAttribute('class') }} class="form-control mb-3" />
-
+ {{ children }}
+{% elseif element_id == 'edit-combine' %}
+  <input{{ attributes.addClass('form-control').setAttribute('placeholder', 'Search products...') }} />
+  {{ children }}
 {% else %}
 {# {{ dump(element['#id']) }} #}
 <input{{ attributes }} />

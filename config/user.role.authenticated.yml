@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - filter.format.basic_html
+    - node.type.marchant_products
   module:
     - comment
     - contact
     - file
     - filter
+    - node
     - search
     - shortcut
     - system
@@ -23,6 +25,7 @@ permissions:
   - 'access content'
   - 'access shortcuts'
   - 'access site-wide contact form'
+  - 'delete any marchant_products content'
   - 'delete own files'
   - 'post comments'
   - 'search content'

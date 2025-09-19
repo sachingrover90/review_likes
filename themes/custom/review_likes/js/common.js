@@ -1,3 +1,4 @@
+(function ($, Drupal) {  
   //fixed header logic
   if ($(window).width() > 992) {
       $(window).scroll(function() {
@@ -190,3 +191,4 @@
       toggleFields(); // On dropdown change
    });
 });
+})(jQuery, Drupal);

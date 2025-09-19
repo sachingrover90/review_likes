@@ -77,12 +77,29 @@
   'edit-rating',
   'edit-price',
   'edit-description',
-  'edit-image--label'
+  'edit-image--label',
+  'edit-product-id',
 
 ] %}
 
 {% if element_id in allowed_ids %}
   <label for="{{ element['#id'] }}" class="required mb-2">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-testified-video-1' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-testified-video-0' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-product-variation-1' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-product-variation-0' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
     {{ element['#title'] }}
   </label>
 {% endif %}

@@ -12,9 +12,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Url;
 
-class ProductForm extends FormBase {
+class ProductEditForm extends FormBase {
 
      /**
    * The messenger service.
@@ -41,7 +40,7 @@ class ProductForm extends FormBase {
   }
 
   public function getFormId() {
-    return 'role_based_registration_product_form';
+    return 'role_based_registration_product_edit_form';
   }
 
   /**
@@ -50,15 +49,21 @@ class ProductForm extends FormBase {
   public static function access(AccountInterface $account) {
     $has_merchant_role = in_array('merchant', $account->getRoles());
     $has_permission = $account->hasPermission('create product content');
-    return AccessResult::allowedIf($has_merchant_role && $has_permission)
-      ->addCacheContexts(['user.roles', 'user.permissions']);
+    // return AccessResult::allowedIf($has_merchant_role && $has_permission)
+    //   ->addCacheContexts(['user.roles', 'user.permissions']);
+    return AccessResult::allowedIf($has_merchant_role || $has_permission)
+  ->addCacheContexts(['user.roles', 'user.permissions']);
+
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-
+  public function buildForm(array $form, FormStateInterface $form_state, $nid = NULL) {
+ if ($nid) {
+    $node = Node::load($nid);
+    if ($node) {
+    // $node = \Drupal\node\Entity\Node::load($nid);
     // Extract Data Section
     $form['extract_section'] = [
       '#type' => 'fieldset',
@@ -113,8 +118,27 @@ $form['platforms_wrapper'] = [
   '#prefix' => '<div class="row justify-content-center"><div id="platforms-wrapper"> <div class="row justify-content-center"> <div class="col-md-10"><div class="mb-3 adminplatform"> <div class="platform-wrapper">',
   '#suffix' => '</div> </div> </div> </div></div>',
 ];
+$platform_items = [];
+if ($node && !$node->get('field_platform_link')->isEmpty()) {
+  foreach ($node->get('field_platform_link')->referencedEntities() as $paragraph) {
+    $platform_items[] = [
+      'link' => $paragraph->get('field_platform_link')->value,
+      'price' => $paragraph->get('field_platform_price')->value,
+      'rating' => $paragraph->get('field_rating')->value,
+      'coupon' => $paragraph->get('field_coupon_code')->value,
+      'date' => $paragraph->get('field_coupon_expiry_date')->value,
+      'affliate' => $paragraph->get('field_affliate_link')->value,
+      'affiliate_toggle' => !empty($paragraph->get('field_affliate_link')->value),
+    ];
+  }
+}
 
-foreach ($platform_items as $delta) {
+// If no items exist, initialize at least one empty row
+if (empty($platform_items)) {
+  $platform_items[] = [];
+}
+
+foreach ($platform_items as $delta => $item) {
   // Create a row container for each platform
   $form['platforms_wrapper']['platforms'][$delta] = [
     '#type' => 'container',
@@ -133,7 +157,7 @@ foreach ($platform_items as $delta) {
       // '#title' => $this->t('Online Selling Platforms (links)'),
       '#required' => TRUE,
       '#attributes' => ['placeholder' => 'add more link same product', 'class' => ['form-control me-4']],
-      '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'link']),
+      '#default_value' => $item['link'] ?? '',
       '#prefix' => '<div class="col-md-5 mb-3"><h5 class="required mb-1">Online Selling Platforms (links)</h5>',
       '#suffix' => '</div>',
     ];
@@ -144,7 +168,7 @@ foreach ($platform_items as $delta) {
       //  '#title' => $this->t('Price'),
       '#attributes' => ['placeholder' => 'Price', 'class' => ['form-control me-4', 'rating-field']],
       '#required' => TRUE,
-      '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'price']),
+       '#default_value' => $item['price'] ?? '',
       '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Price</h5>',
       '#suffix' => '</div>',
     ];
@@ -155,7 +179,7 @@ foreach ($platform_items as $delta) {
         // '#title' => $this->t('Rating'),
         '#attributes' => ['placeholder' => 'Rating', 'class' => ['form-control me-4', 'rating-field']],
         '#required' => TRUE,
-        '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'rating']),
+       '#default_value' => $item['rating'] ?? '',
         '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Rating</h5>',
         '#suffix' => '</div>',
       ];
@@ -166,7 +190,7 @@ foreach ($platform_items as $delta) {
         //  '#title' => $this->t('Coupon'),
         '#attributes' => ['placeholder' => 'Coupon Code', 'class' => ['form-control me-4']],
         '#required' => TRUE,
-        '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'coupon']),
+        '#default_value' => $item['coupon'] ?? '',
         '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Coupon Code</h5>',
         '#suffix' => '</div>',
       ];
@@ -177,10 +201,7 @@ foreach ($platform_items as $delta) {
         '#type' => 'date',
         '#title' => $this->t('Date'),
         '#attributes' => ['class' => ['form-control me-4']],
-        // '#default_value' => $form_state->getValue(
-        //     ['platforms_wrapper', 'platforms', $delta, 'date'], 
-        //     date('Y-m-d') // Default to current date
-        // ),
+        '#default_value' => !empty($item['date']) ? date('Y-m-d', strtotime($item['date'])) : '',
         '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Date</h5>',
         '#suffix' => '</div>',
         ];
@@ -199,7 +220,7 @@ $form['platforms_wrapper']['platforms'][$delta]['affliate'] = [
   '#required' => $form_state->getValue([
     'platforms_wrapper', 'platforms', $delta, 'affiliate_toggle'
   ], FALSE),
-  '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'affliate']),
+  '#default_value' => $item['affliate'] ?? '',
   '#prefix' => '<div class="col-md-5 mb-3" id="affiliate-field-wrapper-' . $delta . '"><h5 class="mb-1">Affiliate Link</h5>',
   '#suffix' => '</div>',
 ];
@@ -207,28 +228,58 @@ $form['platforms_wrapper']['platforms'][$delta]['affliate'] = [
 
 
 
-$form['platforms_wrapper']['platforms'][$delta]['affiliate_toggle'] = [ 
-  '#type' => 'checkbox', 
-  //'#title' => $this->t('Enable Affiliate Link'), 
-  '#default_value' => $form_state->getValue([ 
-    'platforms_wrapper', 'platforms', $delta, 'affiliate_toggle' 
-  ], FALSE), 
-  '#attributes' => [ 
-    'class' => ['affiliateToggle'], 
-    'data-target' => 'paffliatelink-' . $delta, 
-    'data-delta' => $delta, 
-  ], 
-  // 👇 wrap checkbox + custom slider in one <label>
-  '#prefix' => '<div class="col-md-1 mb-3 linktoggle-btn"><div class="toggle-wrapper mt-3"><label class="toggle-switch">',
-  '#suffix' => '<span class="slider"></span></label></div></div>', 
-  '#ajax' => [ 
-    'callback' => [$this, 'affiliateToggleCallback'], 
-    'wrapper' => 'affiliate-field-wrapper-' . $delta, 
-    'event' => 'change', 
-  ], 
+// Toggle switch for affiliate link - using custom markup
+$form['platforms_wrapper']['platforms'][$delta]['affiliate_toggle'] = [
+  '#type' => 'checkbox',
+  '#title' => $this->t('Enable Affiliate Link'),
+ '#default_value' => $item['affiliate_toggle'] ?? FALSE,
+  '#attributes' => [
+    'class' => ['affiliateToggle'],
+    'data-target' => 'paffliatelink-' . $delta,
+    'data-delta' => $delta,
+  ],
+  '#prefix' => '<div class="col-md-1 mb-3 linktoggle-btn"><div class="toggle-wrapper mt-3"><label class="">',
+  '#suffix' => '<span class="slider"></span></label></div></div>',
+  '#ajax' => [
+    'callback' => [$this, 'affiliateToggleCallback'],
+    'wrapper' => 'affiliate-field-wrapper-' . $delta,
+    'event' => 'change',
+  ],
+  // Hide the default label and use custom structure
   '#title_display' => 'invisible',
 ];
+// // Toggle switch for affiliate link
+// $form['platforms_wrapper']['platforms'][$delta]['affiliate_toggle'] = [
+//   '#type' => 'checkbox',
+//   '#title' => $this->t('Enable Affiliate Link'),
+//   '#default_value' => $form_state->getValue([
+//     'platforms_wrapper', 'platforms', $delta, 'affiliate_toggle'
+//   ], FALSE),
+//   '#attributes' => [
+//     'class' => ['affiliateToggle'],
+//     'data-target' => 'paffliatelink-' . $delta,
+//     'data-delta' => $delta,
+//   ],
+//   '#prefix' => '<div class="col-md-1 mb-3 linktoggle-btn"><div class="toggle-wrapper mt-3">',
+//   '#suffix' => '</div></div>',
+//   '#ajax' => [
+//     'callback' => [$this, 'affiliateToggleCallback'],
+//     'wrapper' => 'affiliate-field-wrapper-' . $delta,
+//     'event' => 'change',
+//   ],
+// ];
 
+
+        // // Affliate Link field
+        // $form['platforms_wrapper']['platforms'][$delta]['affliate'] = [
+        //     '#type' => 'textfield',
+        //     //  '#title' => $this->t('Affliate Link'),
+        //     '#attributes' => ['placeholder' => 'Affliate Link', 'class' => ['form-control me-4']],
+        //     '#required' => TRUE,
+        //     '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'affliate']),
+        //     '#prefix' => '<div class="col-md-5 mb-3"><h5 class="required mb-1">Affliate Link</h5>',
+        //     '#suffix' => '</div>',
+        // ];
 
   // Remove button (only if more than one row)
   if (count($platform_items) > 1) {
@@ -282,7 +333,8 @@ $form['platforms_wrapper']['hint'] = [
     $form['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Product Title'),
-       '#title_display' => 'before',
+      '#title_display' => 'before',
+      '#default_value' => $node ? $node->label() : '',
       '#required' => TRUE,
       '#maxlength' => 255,
       '#attributes' => ['class' => ['form-control', 'mb-3']],
@@ -296,6 +348,8 @@ $form['platforms_wrapper']['hint'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Product ID'),
       '#title_display' => 'before',
+    //   '#default_value' => $form_state->getValue('product_id'),
+      '#default_value' => $node ? $node->get('field_legal_business_name')->value : '',
       '#required' => TRUE,
       '#maxlength' => 255,
       '#attributes' => ['class' => ['form-control', 'mb-3']],
@@ -303,25 +357,42 @@ $form['platforms_wrapper']['hint'] = [
       '#suffix' => '</div>',
     ];
 
-    
-
     $form['image'] = [      
-      '#type' => 'managed_file',
-      '#title' => $this->t('Upload Image'),
-      '#title_display' => 'before',
-      '#upload_location' => 'public://products/',
-      '#upload_validators' => [
-        'file_validate_extensions' => ['png jpg jpeg gif'],
-        'file_validate_size' => [2 * 1024 * 1024],
-      ],
-      '#required' => TRUE,
-      '#suffix' => '</div>',
-    ];
+  '#type' => 'managed_file',
+  '#title' => $this->t('Upload Image'),
+  '#title_display' => 'before',
+  '#default_value' => $node && !$node->get('field_image')->isEmpty()
+    ? [$node->get('field_image')->target_id]
+    : NULL,
+  '#upload_location' => 'public://products/',
+  '#upload_validators' => [
+    'file_validate_extensions' => ['png jpg jpeg gif'],
+    'file_validate_size' => [2 * 1024 * 1024],
+  ],
+  '#required' => TRUE,
+  '#suffix' => '</div>',
+];
+
+
+    // $form['image'] = [      
+    //   '#type' => 'managed_file',
+    //   '#title' => $this->t('Upload Image'),
+    //   '#title_display' => 'before',
+    // //   '#default_value' => $node ? $node->get('field_image'),
+    //   '#upload_location' => 'public://products/',
+    //   '#upload_validators' => [
+    //     'file_validate_extensions' => ['png jpg jpeg gif'],
+    //     'file_validate_size' => [2 * 1024 * 1024],
+    //   ],
+    //   '#required' => TRUE,
+    //   '#suffix' => '</div>',
+    // ];
 
     $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Product Description'),
       '#title_display' => 'before',
+      '#default_value' => $node ? $node->get('body')->value : '',
       '#required' => TRUE,
       '#attributes' => ['class' => ['form-control'], 'rows' => 3],
       '#prefix' => '<div class="col-md-5 mb-3">',
@@ -333,6 +404,7 @@ $form['platforms_wrapper']['hint'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Keywords'),
       '#title_display' => 'before',
+      '#default_value' => $node ? $node->get('field_prices')->value : '',
       '#description' => $this->t('Separate keywords with commas'),
       '#required' => TRUE,
       '#attributes' => ['class' => ['form-control'], 'rows' => 2],
@@ -358,6 +430,7 @@ $form['platforms_wrapper']['hint'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Sold By'),
       '#title_display' => 'before',
+      '#default_value' => $node ? $node->get('field_sold_bys')->value : '',
     //   '#target_type' => 'user',
     //   '#default_value' => $user_entity,
       '#required' => TRUE,
@@ -393,6 +466,7 @@ $form['platforms_wrapper']['hint'] = [
       '#title_display' => 'before',
       '#min' => 0,
       '#required' => TRUE,
+      '#default_value' => $node ? $node->get('field_tests_done')->value : '',
       '#attributes' => ['class' => ['form-control', 'mb-3']],
       '#prefix' => '<div class="col-md-5 mb-3">',
       '#suffix' => '</div> ',
@@ -406,7 +480,9 @@ $form['platforms_wrapper']['hint'] = [
             '1' => $this->t('Yes'),
             '0' => $this->t('No'),
         ],
-        // '#default_value' => $form_state->getValue('testified_video', 'no'),
+     '#default_value' => $node && !$node->get('field_testified_video')->isEmpty()
+    ? (string) $node->get('field_testified_video')->value  // cast to string
+    : '',  // fallback to "No"
         '#required' => TRUE,
         '#prefix' => '<div class="col-md-5 mb-3">',
         '#suffix' => '<div class="my-2 text-danger">' . $this->t('If yes, you may have to add your video in Add own product video') . '</div></div>',
@@ -416,74 +492,65 @@ $form['platforms_wrapper']['hint'] = [
         ];
 
 
-        // Add this to your form building function
-        $form['product_variation'] = [
-        '#type' => 'radios',
-        '#title' => $this->t('Is this product has Variation?'),
-        '#options' => [
-            '1' => $this->t('Yes'),
-            '0' => $this->t('No'),
-        ],
-        // '#default_value' => $form_state->getValue('product_variation', 'no'),
-        '#required' => TRUE,
-        '#prefix' => '<div class="col-md-5 mb-3">',
-        '#suffix' => '</div> </div>',
-        // '#attributes' => [
-        //     'class' => ['d-flex', 'align-items-center', 'gap-3'],
+$form['product_variation'] = [
+  '#type' => 'radios',
+  '#title' => $this->t('Is this product has Variation?'),
+  '#options' => [
+    '1' => $this->t('Yes'),
+    '0' => $this->t('No'),
+  ],
+  '#default_value' => $node && !$node->get('field_product_variation')->isEmpty()
+    ? (string) $node->get('field_product_variation')->value  // cast to string
+    : '0',  // fallback to "No"
+  '#required' => TRUE,
+  '#prefix' => '<div class="col-md-5 mb-3">',
+  '#suffix' => '</div> </div>',
+];
+
+
+
+        // // Add this to your form building function
+        // $form['product_variation'] = [
+        // '#type' => 'radios',
+        // '#title' => $this->t('Is this product has Variation?'),
+        // '#options' => [
+        //     '1' => $this->t('Yes'),
+        //     '0' => $this->t('No'),
         // ],
-        ];
-   
-// Actions container wrapping all buttons
-$form['actions'] = [
-  '#type' => 'actions',
-  '#prefix' => '<div class="col-md-12 text-center my-4">',
-  '#suffix' => '</div>',
+        // '#default_value' => $node ? $node->get('field_product_variation')->value : '',
+        // '#required' => TRUE,
+        // '#prefix' => '<div class="col-md-5 mb-3">',
+        // '#suffix' => '</div> </div>',
+        // // '#attributes' => [
+        // //     'class' => ['d-flex', 'align-items-center', 'gap-3'],
+        // // ],
+        // ];
+   $form['nid'] = [
+  '#type' => 'hidden',
+  '#value' => $node ? $node->id() : NULL,
 ];
 
-// Add Product button
-$form['actions']['submit'] = [
-  '#type' => 'submit',
-  '#value' => $this->t('Add Product'),
-  '#attributes' => ['class' => ['btn', 'btn-default', 'mx-2']],
-];
-
-// Edit Product button (redirect without submitting)
-$form['actions']['edit_product'] = [
-  '#type' => 'submit',
-  '#value' => $this->t('Edit Product'),
-  '#attributes' => [
-    'class' => ['btn', 'btn-default', 'mx-2'],
-    'onclick' => 'window.location.href="/all-products"; return false;', // redirect
-  ],
-];
-
-// Delete Product button (redirect without submitting)
-$form['actions']['delete_product'] = [
-  '#type' => 'submit',
-  '#value' => $this->t('Delete Product'),
-  '#attributes' => [
-    'class' => ['btn', 'btn-default', 'mx-2'],
-    'onclick' => 'window.location.href="/all-products"; return false;', // redirect
-  ],
-];
-
-// All Products button (redirect)
-$form['actions']['all_products'] = [
-  '#type' => 'submit',
-  '#value' => $this->t('All Products'),
-  '#attributes' => [
-    'class' => ['btn', 'btn-default', 'mx-2'],
-    'onclick' => 'window.location.href="/all-products"; return false;', // redirect
-  ],
-];
-
+// Submit button
+    $form['actions'] = [
+      '#type' => 'actions',
+      '#prefix' => '<div class="col-md-12 text-center my-4">',
+      '#suffix' => '</div>',
+    ];
+    $form['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Add Product'),
+      '#attributes' => ['class' => ['btn', 'btn-default']],
+    ];
 
     // Attach library for styling
-    $form['#attached']['library'][] = 'role_based_registration/registration_form';
+    $form['#attached']['library'][] = 'role_based_registration/product_form';
+    // $form['#attached']['library'][] = 'role_based_registration/registration_form';
+}
+ }
 
+ $form['#attached']['library'][] = 'role_based_registration/registration_form';
     return $form;
   }
-
 
   /**
  * AJAX callback for the affiliate toggle.
@@ -536,9 +603,16 @@ public function affiliateToggleCallback(array &$form, FormStateInterface $form_s
   /**
    * Submit form.
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $user = \Drupal::currentUser();
 
+
+public function submitForm(array &$form, FormStateInterface $form_state) {
+  $user = \Drupal::currentUser();
+
+  // Get node id (assume you pass it as hidden field in form)
+  $nid = $form_state->getValue('nid');
+  $node = Node::load($nid);
+
+  if ($node) {
     // Handle image
     $image = $form_state->getValue('image');
     $fid = NULL;
@@ -548,42 +622,29 @@ public function affiliateToggleCallback(array &$form, FormStateInterface $form_s
       $file->save();
       $fid = $file->id();
     }
-    // Collect values
-  $keywords = $form_state->getValue('keywords');
-  $platforms = $form_state->getValue('platforms');
 
-    // Create node
-    $node = Node::create([
-      'type' => 'marchant_products',
-      'title' => $form_state->getValue('title'),
-    'body' => [
+    // Update fields
+    $node->setTitle($form_state->getValue('title'));
+    $node->set('body', [
       'value' => $form_state->getValue('description'),
       'format' => 'plain_text',
-    ],
-    'field_legal_business_name' => $form_state->getValue('product_id'),
-    'field_sold_bys' => $form_state->getValue('sold_by'),
-    'field_tests_done' => $form_state->getValue('tests_done'),
-    // 'field_price' => $form_state->getValue('price'),
-    'field_image' => $fid ? ['target_id' => $fid] : NULL,
-    // 'field_rating' => $form_state->getValue('rating'),
-    'field_product_variation' => $form_state->getValue('product_variation'),
-    'field_testified_video' => $form_state->getValue('testified_video'),
-    
-    
-    
-    'field_prices' => [
-      'value' => $keywords,
+    ]);
+    $node->set('field_legal_business_name', $form_state->getValue('product_id'));
+    $node->set('field_sold_bys', $form_state->getValue('sold_by'));
+    $node->set('field_tests_done', $form_state->getValue('tests_done'));
+    $node->set('field_image', $fid ? ['target_id' => $fid] : NULL);
+    $node->set('field_product_variation', $form_state->getValue('product_variation'));
+    $node->set('field_testified_video', $form_state->getValue('testified_video'));
+    $node->set('field_prices', [
+      'value' => $form_state->getValue('keywords'),
       'format' => 'plain_text',
-    ],
-    'uid' => $user->id(),
-    'status' => 1,
     ]);
 
-    // Save platforms as paragraphs
+    // Replace old paragraphs (optional: clear before saving new ones)
+    $node->get('field_platform_link')->setValue([]);
     $values = $form_state->getValue(['platforms_wrapper', 'platforms']);
     if (!empty($values)) {
       foreach ($values as $item) {
-        // Only create paragraphs for items with data
         if (!empty($item['link']) || !empty($item['price']) || !empty($item['coupon'])) {
           $paragraph = Paragraph::create([
             'type' => 'platform_link',
@@ -593,21 +654,96 @@ public function affiliateToggleCallback(array &$form, FormStateInterface $form_s
             'field_rating' => $item['rating'] ?? '',
             'field_affliate_link' => $item['affliate'] ?? '',
             'field_coupon_expiry_date' => $item['date'] ?? '',
-            
-            
-            
           ]);
           $paragraph->save();
           $node->get('field_platform_link')->appendItem($paragraph);
-        //   $entity->field_coupon_expiry_date->value = $platform['date'];
         }
       }
     }
 
     $node->save();
-    $this->messenger()->addMessage($this->t('Product %title created successfully.', ['%title' => $node->label()]));
-     $form_state->setRedirect('<current>');
+    $this->messenger()->addMessage($this->t('Product %title updated successfully.', ['%title' => $node->label()]));
   }
+  else {
+    $this->messenger()->addError($this->t('Node not found.'));
+  }
+
+  $form_state->setRedirect('<current>');
+}
+
+
+//   public function submitForm(array &$form, FormStateInterface $form_state) {
+//     $user = \Drupal::currentUser();
+
+//     // Handle image
+//     $image = $form_state->getValue('image');
+//     $fid = NULL;
+//     if (!empty($image[0])) {
+//       $file = File::load($image[0]);
+//       $file->setPermanent();
+//       $file->save();
+//       $fid = $file->id();
+//     }
+//     // Collect values
+//   $keywords = $form_state->getValue('keywords');
+//   $platforms = $form_state->getValue('platforms');
+
+//     // Create node
+//     $node = Node::create([
+//       'type' => 'marchant_products',
+//       'title' => $form_state->getValue('title'),
+//     'body' => [
+//       'value' => $form_state->getValue('description'),
+//       'format' => 'plain_text',
+//     ],
+//     'field_legal_business_name' => $form_state->getValue('product_id'),
+//     'field_sold_bys' => $form_state->getValue('sold_by'),
+//     'field_tests_done' => $form_state->getValue('tests_done'),
+//     // 'field_price' => $form_state->getValue('price'),
+//     'field_image' => $fid ? ['target_id' => $fid] : NULL,
+//     // 'field_rating' => $form_state->getValue('rating'),
+//     'field_product_variation' => $form_state->getValue('product_variation'),
+//     'field_testified_video' => $form_state->getValue('testified_video'),
+    
+    
+    
+//     'field_prices' => [
+//       'value' => $keywords,
+//       'format' => 'plain_text',
+//     ],
+//     'uid' => $user->id(),
+//     'status' => 1,
+//     ]);
+
+//     // Save platforms as paragraphs
+//     $values = $form_state->getValue(['platforms_wrapper', 'platforms']);
+//     if (!empty($values)) {
+//       foreach ($values as $item) {
+//         // Only create paragraphs for items with data
+//         if (!empty($item['link']) || !empty($item['price']) || !empty($item['coupon'])) {
+//           $paragraph = Paragraph::create([
+//             'type' => 'platform_link',
+//             'field_platform_link' => $item['link'] ?? '',
+//             'field_platform_price' => $item['price'] ?? '',
+//             'field_coupon_code' => $item['coupon'] ?? '',
+//             'field_rating' => $item['rating'] ?? '',
+//             'field_affliate_link' => $item['affliate'] ?? '',
+//             'field_coupon_expiry_date' => $item['date'] ?? '',
+            
+            
+            
+//           ]);
+//           $paragraph->save();
+//           $node->get('field_platform_link')->appendItem($paragraph);
+//         //   $entity->field_coupon_expiry_date->value = $platform['date'];
+//         }
+//       }
+//     }
+
+//     $node->save();
+//     $this->messenger()->addMessage($this->t('Product %title created successfully.', ['%title' => $node->label()]));
+//      $form_state->setRedirect('<current>');
+//   }
 
  public function redirectToController(array &$form, FormStateInterface $form_state) {
   $url = $form_state->getValue('elink');   // ✅ must match the field name
@@ -633,5 +769,6 @@ public function affiliateToggleCallback(array &$form, FormStateInterface $form_s
     $roles = array_diff($roles, ['authenticated']);
     return !empty($roles) ? reset($roles) : 'authenticated';
   }
+  
 
 }

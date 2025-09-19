@@ -14,7 +14,7 @@
 #}
  
 
- 	  
+ 	  {# {{ dump(element['#id']) }} #}
 {% set form_id = element['#id'] ?? '' %}
 {% if form_id == 'edit-submit-product' %}
   {% set updated_attributes = attributes.addClass('btn btn-default').setAttribute('value', 'Search') %}
@@ -45,6 +45,30 @@
   <input{{ attributes.addClass('btn', 'btn-default') }} />
     {{ children }}
   </div>
+  {% elseif form_id == 'edit-testified-video-1' %}
+
+  <input{{ attributes.addClass('form-check-input') }} />
+    {{ children }}
+  {% elseif form_id == 'edit-testified-video-0' %}
+
+  <input{{ attributes.addClass('form-check-input') }} />
+    {{ children }}
+     {% elseif form_id == 'edit-product-variation-1' %}
+
+  <input{{ attributes.addClass('form-check-input') }} />
+    {{ children }}
+  {% elseif form_id == 'edit-product-variation-0' %}
+
+  <input{{ attributes.addClass('form-check-input') }} />
+    {{ children }}
+    {# {% elseif form_id == 'edit-submit-all-products' %}
+     <input{{ attributes.addClass('btn btn-default') }} />
+    {{ children }} #}
+
+    {% elseif form_id== 'edit-submit-all-products' %}
+  <button{{ attributes.removeAttribute('value').setAttribute('type', 'submit').addClass('btn btn-default') }}>
+    <i class="bi bi-search"></i>
+  </button>
 {% else %}
 {# {{ dump(element['#id']) }} #}
   <input{{ attributes}}/>

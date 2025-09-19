@@ -34,7 +34,7 @@ body {
 aside {
 	top: 0;
 	/* height: 100vh; */
-	padding: 24px 0 24px 10px;
+	padding: 24px 0 24px 0;
 	background: #fbfbfc;
 	border-right: 1px solid #ffd69a;
 }
@@ -57,6 +57,7 @@ nav {
 }
 
 .nav-btn {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	gap: 10px;
@@ -70,16 +71,232 @@ nav {
 }
 
 #add-products h3,
-#add-products h4,
 #profile h4 {
 	font-weight: 600;
 	text-decoration: underline;
+}
+
+#add-products h4{
+	font-size: 1.25rem;
+	font-weight: 600;
+	text-decoration: underline;
+}
+.linktoggle-btn .toggle-wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.linktoggle-btn .toggle-label {
+  font-size: 14px;
+  color: #999;
+  letter-spacing: 2px;
+}
+
+.linktoggle-btn .toggle-state {
+  font-size: 14px;
+  font-weight: bold;
+  color: #999;
+  min-width: 30px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.linktoggle-btn .toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 26px;
+}
+
+.linktoggle-btn .toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.linktoggle-btn .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  border-radius: 26px;
+  transition: 0.4s;
+}
+
+.linktoggle-btn .slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.linktoggle-btn input:checked + .slider {
+  background-color: #0d6efd;
+}
+
+.linktoggle-btn input:checked + .slider:before {
+  transform: translateX(24px);
 }
 
 .nav-btn.active,
 .nav-btn:hover {
 	background-color: #ffa92a;
 	color: #ffffff;
+	width: 100%;
+}
+
+.dropdown-menu li a {
+	padding: 10px;
+}
+
+.dropdown-menu li a:hover {
+	background-color: #ffa92a;
+	color: #ffffff;
+}
+
+.p-dropdown {
+	padding: 0;
+}
+
+.view .card {
+	border-radius: 0;
+	transition: transform 0.2s ease-in-out;
+}
+
+.view .card-title {
+	font-size: 1.2rem;
+	font-weight: 600;
+}
+
+#product-performance h2,
+#media-performance h2,
+#myclaim-performance h2,
+#challenge-performance h2,
+#trust-performance h2,
+#game-challenges h2,
+#contact-us h2,
+#messages h2,
+#profile h2 {
+	text-decoration: underline;
+	text-underline-offset: 8px;
+}
+
+#media-performance .card {
+	border-radius: 0;
+	transition: transform 0.2s ease-in-out;
+}
+
+.progress {
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+#media-performance .card .card-body {
+	padding: 1.5rem 2.5rem;
+}
+
+#media-performance .card-subtitle {
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+#trust-performance h5 {
+	font-weight: 600;
+}
+
+#notifications .nav-tabs .nav-link {
+	font-weight: 500;
+	border-radius: 6px 6px 0 0;
+}
+
+#notifications .nav-tabs .nav-link.active {
+	background-color: #f8f9fa;
+	border-color: #dee2e6 #dee2e6 #fff;
+}
+
+#notifications .table td,
+#notifications .table th {
+	vertical-align: middle;
+}
+
+#media-performance video {
+	border-radius: 10px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#game-challenges .table thead th {
+	vertical-align: middle;
+}
+
+#game-challenges .ratio {
+	max-height: 150px;
+}
+
+#game-challenges textarea.form-control {
+	resize: none;
+}
+
+#game-challenges .btn {
+	min-width: 90px;
+}
+
+#contact-us .card {
+	border-radius: 12px;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#contact-us p {
+	font-size: 0.95rem;
+}
+
+.card {
+	border-radius: 12px;
+	transition: transform 0.2s ease-in-out;
+}
+
+.progress {
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+/* Product table styling */
+.product-table {
+	background: #fff;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-table thead {
+	background: #007bff;
+	color: #fff;
+	text-align: center;
+}
+
+.product-table th,
+.product-table td {
+	padding: 12px 15px;
+	vertical-align: middle;
+}
+
+.product-table tbody tr:hover {
+	background-color: #f8f9fa;
+}
+
+.product-table .btn {
+	font-size: 0.85rem;
+}
+
+.dropend .dropdown-toggle::after {
+	display: inline-block;
+	margin-left: auto;
 }
 
 main {
@@ -243,7 +460,15 @@ select:focus {
 	margin-right: 1rem;
 }
 
-.cardgreen-text {
+#productperf .nav-btn.dropdown-toggle::after {
+	display: none;
+}
+
+#productperf .dropdown-menu {
+	min-width: 180px;
+}
+
+/* .cardgreen-text {
 	color: #c3c13e;
 	font-family: "Arima", serif;
 	font-weight: 600;
@@ -304,7 +529,7 @@ select:focus {
 	font-family: "Arima", serif;
 	font-weight: 600;
 	font-size: 1rem;
-}
+} */
 
 .trendingvideo-section video {
 	border-radius: 10px !important;
@@ -333,7 +558,6 @@ input[type="text"] {
 
 /* Messages Section */
 #messages h2 {
-	font-size: 20px;
 	font-weight: 600;
 	color: #333;
 }
@@ -352,7 +576,6 @@ input[type="text"] {
 	border-color: #0d6efd;
 }
 
-/* Cards */
 #messageList .card {
 	border-radius: 12px;
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -382,7 +605,6 @@ input[type="text"] {
 	border-radius: 0 0 12px 12px;
 }
 
-/* Badge styling */
 #messageList .badge {
 	padding: 6px 10px;
 	font-size: 12px;
@@ -399,6 +621,10 @@ input[type="text"] {
 	background: transparent;
 	color: #ff6b6b;
 	border-color: #ff6b6b;
+}
+
+#claims-gifts h2{
+	text-decoration: underline;
 }
 
 .addBrandBtn,
@@ -421,13 +647,120 @@ input[type="text"] {
 .g-title {
 	font-size: 0.9rem;
 	color: red;
-	margin: 0rem 0 3rem;
+	margin: 0rem 0 1rem;
 }
 
 label.required::after {
 	content: " *";
 	color: red;
 	font-weight: bold;
+}
+
+#add-products .form-check-input{
+	border: var(--bs-border-width) solid #b2bbc4;
+}
+
+.reply-helptext{
+	font-size: 0.85rem;
+}
+
+.hiretesterform {
+  width: 90%;
+}
+
+.hiretesterform h2{
+	text-decoration: underline;
+}
+
+.hiretesterform h4{
+	font-size: 1.25rem;
+	text-decoration: underline;
+}
+
+.hiretesterform label {
+  font-weight: 600;
+}
+
+.hiretesterform label.required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
+}
+
+.hiretesterform .card {
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.hiretesterform .inline-input {
+  width: 150px;
+  display: inline-block;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.hiretesterform input{
+	margin: 0 0.25rem;
+}
+
+.producttestingvideostatus h2 {
+  font-weight: 600;
+  color: #000;
+  text-decoration: underline;
+}
+
+.producttestingvideostatus table {
+  overflow: hidden;
+}
+
+.producttestingvideostatus thead th {
+  background: #ffa92a;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  padding: 12px;
+}
+
+.producttestingvideostatus th {
+  font-weight: 500;
+  text-align: center;
+}
+
+.producttestingvideostatus td {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 15px;
+}
+
+.producttestingvideostatus .badge {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.termscondition h6{
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+.submitownvideoform h2 {
+  font-weight: 600;
+  color: #333;
+  text-decoration: underline;
+}
+
+.submitownvideoform label {
+  font-weight: 600;
+}
+
+.submitownvideoform label.required::after {
+  content: " *";
+  color: red;
+  font-weight: bold;
 }
 
 
@@ -452,6 +785,9 @@ label.required::after {
 		grid-column: 1/-1
 	}
 }
+
+
+
 div#ajax-wrapper {
     margin-bottom: 1rem !important;
     flex: 0 0 auto;
@@ -463,4 +799,60 @@ h5.required::after
     content: " *";
     color: red;
     font-weight: bold;
+}
+
+span.fieldset-legend.js-form-required.form-required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+}
+
+
+
+
+
+
+.toggle-wrapper {
+  position: relative;
+}
+
+.toggle-wrapper label {
+  display: inline-block;
+  position: relative;
+}
+
+.toggle-wrapper .affiliateToggle {
+  opacity: 0;
+  position: absolute;
+}
+
+.toggle-wrapper .slider {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: .4s;
+  cursor: pointer;
+}
+
+.toggle-wrapper .slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .4s;
+}
+
+.toggle-wrapper .affiliateToggle:checked + .slider {
+  background-color: #2196F3;
+}
+
+.toggle-wrapper .affiliateToggle:checked + .slider:before {
+  transform: translateX(26px);
 }

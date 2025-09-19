@@ -11,8 +11,10 @@ dependencies:
     - field.field.node.marchant_products.field_price
     - field.field.node.marchant_products.field_prices
     - field.field.node.marchant_products.field_product_url
+    - field.field.node.marchant_products.field_product_variation
     - field.field.node.marchant_products.field_rating
     - field.field.node.marchant_products.field_sold_bys
+    - field.field.node.marchant_products.field_testified_video
     - field.field.node.marchant_products.field_tests_done
     - node.type.marchant_products
   module:
@@ -99,6 +101,16 @@ content:
     third_party_settings: {  }
     weight: 111
     region: content
+  field_product_variation:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 114
+    region: content
   field_rating:
     type: list_default
     label: above
@@ -113,6 +125,16 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 108
+    region: content
+  field_testified_video:
+    type: boolean
+    label: above
+    settings:
+      format: yes-no
+      format_custom_false: 'No'
+      format_custom_true: 'Yes'
+    third_party_settings: {  }
+    weight: 113
     region: content
   field_tests_done:
     type: number_integer
