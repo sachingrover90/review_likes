@@ -43,6 +43,7 @@ module:
   menu_ui: 0
   mobile_number: 0
   mobile_otp: 0
+  mysql: 0
   node: 0
   node_to_pdf: 0
   options: 0
