@@ -72,7 +72,7 @@ role_based_registration.product_edit_form:
 role_based_registration.delete_node:
   path: '/product/delete-node/{node}'
   defaults:
-    _controller: '\Drupal\role_based_registration\Controller\DeleteController::deleteNode'
+    _controller: '\Drupal\role_based_registration\Controller\DeleteController::unpublishNode'
   requirements:
     _permission: 'access content'
     _entity_access: 'node.delete'
