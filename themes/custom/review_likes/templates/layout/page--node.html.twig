@@ -1,5 +1,13 @@
 <header class="">{{ page.header }}</header>
 
+{% set url = url('<current>')['#markup'] %}
+
+{% set cur_url = url|split('/')|last %}
+
+
+
+{% if cur_url == 'all-products' %}
+
 {% if 'merchant' in user.roles %}
 <div class="app" data-app="review-likes-dashboard">
   <!-- Sidebar -->
@@ -15,3 +23,13 @@
 {% else %}
   <p>You don’t have permission to see this data.</p>
 {% endif %}
+{% else %}
+{{ page.content }}
+{% endif %}
+
+
+
+
+
+
+
