@@ -30,6 +30,11 @@
  
 {% if  element['#name'] == 'product' %}
 {{ children }}
+{% elseif element['#id'] == 'edit-coupon-section' %}
+
+<div class="row">
+{{ children }}
+</div>
 {% else %}
 {{ children }}
 {% endif %}

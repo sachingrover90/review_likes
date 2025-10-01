@@ -1,0 +1,45 @@
+/* .toggle-wrapper {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.toggle-wrapper label {
+  display: flex !important;
+  align-items: center !important;
+  cursor: pointer !important;
+} */
+
+.couponToggle {
+  display: none !important;
+}
+
+/* .slider {
+  position: relative !important;
+  display: inline-block !important;
+  width: 50px !important;
+  height: 24px !important;
+  background-color: #ccc !important;
+  border-radius: 24px !important;
+  margin-right: 10px !important;
+  transition: .4s !important;
+}
+
+.slider:before {
+  position: absolute !important;
+  content: "" !important;
+  height: 16px !important;
+  width: 16px !important;
+  left: 4px !important;
+  bottom: 4px !important;
+  background-color: white !important;
+  border-radius: 50% !important;
+  transition: .4s !important;
+}
+
+.couponToggle:checked + .slider {
+  background-color: #2196F3 !important;
+}
+
+.couponToggle:checked + .slider:before {
+  transform: translateX(26px) !important;
+} */

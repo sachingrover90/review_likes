@@ -289,5 +289,176 @@ function review_likes_form_views_exposed_form_alter(&$form, \Drupal\Core\Form\Fo
 // }
 
 
+
+
+
    
- 
+function review_likes_preprocess_page(&$variables) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  
+  if ($route_name == 'merchant_dashboard.claims_gifts') {
+    $variables['is_claims_gifts_page'] = TRUE;
+    
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    
+    // Load gift content type nodes
+    $gift_query = $node_storage->getQuery()
+      ->condition('type', 'gift')
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+    
+    $gift_nids = $gift_query->execute();
+    
+    if ($gift_nids) {
+      $gift_nodes = $node_storage->loadMultiple($gift_nids);
+      $variables['gifts'] = [];
+      
+      foreach ($gift_nodes as $gift) {
+        $variables['gifts'][] = [
+          'id' => $gift->id(),
+          'title' => $gift->getTitle(),
+          'description' => $gift->hasField('body') && !$gift->body->isEmpty() 
+            ? $gift->body->value 
+            : '',
+          'buyer_user' => $gift->hasField('field_buyer_username') && !$gift->field_buyer_username->isEmpty() 
+            ? $gift->field_buyer_username->value 
+            : NULL,
+          'email' => $gift->hasField('field_email') && !$gift->field_email->isEmpty() 
+            ? $gift->field_email->value 
+            : NULL,
+          'order_id' => $gift->hasField('field_external_id') && !$gift->field_external_id->isEmpty() 
+            ? $gift->field_external_id->value 
+            : NULL,
+          'product_link' => $gift->hasField('field_product_url') && !$gift->field_product_url->isEmpty() 
+            ? $gift->field_product_url->value 
+            : NULL,
+          'phone' => $gift->hasField('field_telephone') && !$gift->field_telephone->isEmpty() 
+            ? $gift->field_telephone->value 
+            : NULL,
+         'commerce_platform' => $gift->hasField('field_e_commerce_platform') && !$gift->get('field_e_commerce_platform')->isEmpty()
+  ? $gift->get('field_e_commerce_platform')->entity->label()
+  : NULL,
+
+          'image' => $gift->hasField('field_image') && !$gift->field_image->isEmpty() 
+  ? [
+      'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($gift->field_image->entity->getFileUri()),
+      'alt' => $gift->field_image->alt,
+    ] 
+  : NULL,
+
+          'date' => $gift->hasField('field_order_datetime') && !$gift->field_order_datetime->isEmpty() 
+            ? $gift->field_order_datetime->value 
+            : NULL,
+          'created_timestamp' => $gift->getCreatedTime(),
+          'changed_timestamp' => $gift->getChangedTime(),
+        ];
+      }
+    }
+    
+    // Load rebuttal content type nodes
+    $claim_query = $node_storage->getQuery()
+      ->condition('type', 'rebuttal')
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+    
+    $claim_nids = $claim_query->execute();
+    
+    if ($claim_nids) {
+      $claim_nodes = $node_storage->loadMultiple($claim_nids);
+      $variables['claims'] = [];
+      
+      foreach ($claim_nodes as $claim) {
+        $variables['claims'][] = [
+          'id' => $claim->id(),
+          'title' => $claim->getTitle(),
+          'description' => $claim->hasField('body') && !$claim->body->isEmpty() 
+            ? $claim->body->value 
+            : '',
+          'buyer_user' => $claim->hasField('field_buyer_username') && !$claim->field_buyer_username->isEmpty() 
+            ? $claim->field_buyer_username->value 
+            : NULL,
+          'email' => $claim->hasField('field_email') && !$claim->field_email->isEmpty() 
+            ? $claim->field_email->value 
+            : NULL,
+          'order_id' => $claim->hasField('field_external_id') && !$claim->field_external_id->isEmpty() 
+            ? $claim->field_external_id->value 
+            : NULL,
+          'product_link' => $claim->hasField('field_product_url') && !$claim->field_product_url->isEmpty() 
+            ? $claim->field_product_url->value 
+            : NULL,
+          'phone' => $claim->hasField('field_telephone') && !$claim->field_telephone->isEmpty() 
+            ? $claim->field_telephone->value 
+            : NULL,
+             'commerce_platform' => $claim->hasField('field_e_commerce_platform') && !$claim->get('field_e_commerce_platform')->isEmpty()
+  ? $claim->get('field_e_commerce_platform')->entity->label()
+  : NULL,
+          'image' => $claim->hasField('field_image') && !$claim->field_image->isEmpty() 
+  ? [
+      'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($claim->field_image->entity->getFileUri()),
+      'alt' => $claim->field_image->alt,
+    ] 
+  : NULL,
+
+          'date' => $claim->hasField('field_order_datetime') && !$claim->field_order_datetime->isEmpty() 
+            ? $claim->field_order_datetime->value 
+            : NULL,
+          'created_timestamp' => $claim->getCreatedTime(),
+          'changed_timestamp' => $claim->getChangedTime(),
+        ];
+      }
+    }
+  }
+}
+
+
+// In your .theme file or module
+// function review_likes_preprocess_page(&$variables) {
+//   if (isset($variables['is_claims_gifts_page']) && $variables['is_claims_gifts_page']) {
+//     // Load claims nodes
+//     $claim_nodes = \Drupal::entityTypeManager()
+//       ->getStorage('node')
+//       ->loadByProperties(['type' => 'rebuttal', 'status' => 1]);
+    
+//     $claims = [];
+//     foreach ($claim_nodes as $node) {
+//       $claims[] = [
+//         'title' => $node->getTitle(),
+//         'description' => $node->body->value,
+//         'status' => $node->field_status->value,
+//         'date' => $node->field_order_date->value,
+//         'created' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'Y-m-d H:i'),
+//         'created_timestamp' => $node->getCreatedTime(),
+//         'changed' => \Drupal::service('date.formatter')->format($node->getChangedTime(), 'custom', 'Y-m-d H:i'),
+//         'changed_timestamp' => $node->getChangedTime(),
+//       ];
+//     }
+    
+//     // Load gifts nodes
+//     $gift_nodes = \Drupal::entityTypeManager()
+//       ->getStorage('node')
+//       ->loadByProperties(['type' => 'gift', 'status' => 1]);
+    
+//     $gifts = [];
+//     foreach ($gift_nodes as $node) {
+//       $gifts[] = [
+//         'title' => $node->getTitle(),
+//         'description' => $node->body->value,
+//         'image' => [
+//           'url' => $node->field_image->entity ? $node->field_image->entity->url() : '',
+//           'alt' => $node->field_image->alt ?: '',
+//         ],
+//         'price' => $node->field_price->value,
+//         'date' => $node->field_expiry_date->value,
+//         'created' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'Y-m-d H:i'),
+//         'created_timestamp' => $node->getCreatedTime(),
+//         'changed' => \Drupal::service('date.formatter')->format($node->getChangedTime(), 'custom', 'Y-m-d H:i'),
+//         'changed_timestamp' => $node->getChangedTime(),
+//       ];
+//     }
+    
+//     $variables['claims'] = $claims;
+//     $variables['gifts'] = $gifts;
+//   }
+// }

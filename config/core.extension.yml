@@ -41,6 +41,7 @@ module:
   link_attributes: 0
   menu_link_content: 0
   menu_ui: 0
+  merchant_dashboard: 0
   mobile_number: 0
   mobile_otp: 0
   mysql: 0

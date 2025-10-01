@@ -1,0 +1,70 @@
+merchant_dashboard.dashboard:
+  path: '/merchant/dashboard'
+  defaults:
+    _title: 'Merchant Dashboard'
+    _controller: '\Drupal\merchant_dashboard\Controller\MerchantDashboardController::dashboard'
+  requirements:
+    _permission: 'access merchant dashboard'
+
+merchant_dashboard.rebuttal:
+  path: '/merchant/rebuttal'
+  defaults:
+    _title: 'Rebuttal'
+    _form: '\Drupal\merchant_dashboard\Form\RebuttalForm'
+  requirements:
+    _permission: 'access merchant dashboard'
+merchant_dashboard.gifts:
+  path: '/merchant/gift'
+  defaults:
+    _title: 'Gifts'
+    _form: '\Drupal\merchant_dashboard\Form\GiftForm'
+  requirements:
+    _permission: 'access merchant dashboard'
+
+
+merchant_dashboard.claims_gifts:
+  path: '/merchant/claims-gifts'
+  defaults:
+    _title: 'Claims & Gifts'
+    _controller: '\Drupal\merchant_dashboard\Controller\ClaimsGiftsController::combinedForms'
+  requirements:
+    _permission: 'access merchant dashboard'    
+
+
+merchant_dashboard.rebuttal_edit:
+  path: '/claims-gifts/{nid}/edit'
+  defaults:
+    _form: '\Drupal\merchant_dashboard\Form\RebuttalEditForm'
+    _title: 'Edit Claims-Gifts'
+  requirements:
+    _custom_access: '\Drupal\merchant_dashboard\Form\RebuttalEditForm::access'  
+
+
+
+
+merchant_dashboard.delete_node:
+  path: '/claims-gifts/delete-node/{node}'
+  defaults:
+    _controller: '\Drupal\merchant_dashboard\Controller\ClaimsGiftsNodeDeleteController::unpublishNode'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'node.delete'
+  options:
+    _admin_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+
+        
+# marchant_dashboard.rebuttal_edit_form:
+#  path: '/rebuttal/{nid}/edit'
+#  defaults:
+#     _form: '\Drupal\marchant_dashboard\Form\RebuttalEditForm'
+#     _title: 'Edit Rebuttal'
+#  requirements:
+#     _permission: 'access content'
+#     _custom_access: '\Drupal\marchant_dashboard\Controller\RebuttalEditController::access'
+#  options:
+#     parameters:
+#       nid:
+#         type: integer

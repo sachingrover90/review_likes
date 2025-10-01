@@ -3,8 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.gift
     - node.type.marchant_products
+    - node.type.rebuttal
   module:
+    - merchant_dashboard
     - node
     - role_based_registration
 id: merchant
@@ -12,7 +15,11 @@ label: Merchants
 weight: 4
 is_admin: false
 permissions:
+  - 'access merchant dashboard'
   - 'create product content'
   - 'delete any marchant_products content'
+  - 'delete any rebuttal content'
   - 'delete own marchant_products content'
+  - 'edit any gift content'
   - 'edit any marchant_products content'
+  - 'edit any rebuttal content'
