@@ -54,6 +54,13 @@ merchant_dashboard.delete_node:
     parameters:
       node:
         type: entity:node
+merchant_dashboard.product_testing_video_form:
+  path: '/merchant/product-testing-video'
+  defaults:
+    _form: '\Drupal\merchant_dashboard\Form\ProductTestingVideoForm'
+    _title: 'Submit Product Testing Video'
+  requirements:
+    _permission: 'access merchant dashboard'   
 
         
 # marchant_dashboard.rebuttal_edit_form:

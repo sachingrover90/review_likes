@@ -61,9 +61,9 @@
 
   <input{{ attributes.addClass('form-check-input') }} />
     {{ children }}
-    {# {% elseif form_id == 'edit-submit-all-products' %}
-     <input{{ attributes.addClass('btn btn-default') }} />
-    {{ children }} #}
+    {% elseif form_id == 'edit-benchmark-1' %}
+     <input{{ attributes }} />
+    {{ children }}
 
     {% elseif form_id== 'edit-submit-all-products' %}
   <button{{ attributes.removeAttribute('value').setAttribute('type', 'submit').addClass('btn btn-default') }}>

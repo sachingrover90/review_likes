@@ -48,10 +48,16 @@
 #}
 
 {% set classes = ['js-form-item', 'form-item', 'js-form-type-' ~ (type|clean_class), 'form-item-' ~ (name|clean_class), 'js-form-item-' ~ (name|clean_class), title_display not in ['after', 'before'] ? 'form-no-label', disabled == 'disabled' ? 'form-disabled', errors ? 'form-item--error'] %}
+ 
+ {# {{ dump(element['#id']) }} #}
 
 {# Conditionally add virtual-select class only for specific field ID #}
 {% if attributes.id == 'edit-field-filter-target-id' %}
   {% set classes = classes|merge(['form-select', 'mt-3', 'vscomp-ele', 'pop-comp-ele']) %}
+{% endif %}
+
+{% if element['#id'] == 'edit-agree-terms' %}
+{% set classes = classes|merge(['agree-terms']) %}
 {% endif %}
 
 {% set description_classes = ['description', description_display == 'invisible' ? 'visually-hidden'] %}
@@ -59,41 +65,15 @@
 {% set element_id = element['#id'] ?? '' %}
 
 {% set allowed_ids = [
-  'edit-first-name',
-  'edit-last-name',
-  'edit-country',
-  'edit-language',
-  'edit-email',
-  'edit-mobile-country-code',
-  'edit-mobile-mobile',
-  'edit-platforms-wrapper-platforms-0-price',
-  'edit-platforms-wrapper-platforms-0-link',
-  'edit-platforms-wrapper-platforms-0-coupon',
-  'edit-affiliated-link',
-  'edit-title',
-  'edit-sold-by',
-  'edit-tests-done',
-  'edit-keywords',
-  'edit-rating',
-  'edit-price',
-  'edit-description',
-  'edit-image--label',
-  'edit-product-id',
-  'edit-screenshot--label',
-  'edit-product-link',
-  'edit-buyer-username',
-  'edit-repeat-username',
-  'edit-order-id',
-  'edit-shipping-street',
-  'edit-shipping-apartment',
-  'edit-shipping-city',
-  'edit-shipping-state',
-  'edit-shipping-zip',
-  'edit-user-email',
-  'edit-user-phone',
-  'edit-ecommerce-platform',
-  'edit-coupon',
-  'edit-order-datetime-date'
+  'edit-first-name', 'edit-last-name', 'edit-country', 'edit-language',  'edit-email',  'edit-mobile-country-code',
+  'edit-mobile-mobile',  'edit-platforms-wrapper-platforms-0-price',  'edit-platforms-wrapper-platforms-0-link',
+  'edit-platforms-wrapper-platforms-0-coupon',  'edit-affiliated-link',  'edit-title',  'edit-sold-by',  'edit-tests-done',
+  'edit-keywords',  'edit-rating',  'edit-price',  'edit-description',  'edit-image--label',  'edit-product-id',
+  'edit-screenshot--label',  'edit-product-link',  'edit-buyer-username',  'edit-repeat-username',  'edit-order-id',
+  'edit-shipping-street',  'edit-shipping-apartment',  'edit-shipping-city',  'edit-shipping-state',  'edit-shipping-zip',
+  'edit-user-email',  'edit-user-phone',  'edit-ecommerce-platform',  'edit-coupon',  'edit-order-datetime-date',
+  'edit-video-link',  'edit-product-name',
+  
 
 ] %}
 
@@ -111,6 +91,28 @@
   </label>
   {% elseif element_id == 'edit-product-variation-1' %}
   <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+   {% elseif element_id == 'edit-benchmark-1' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+   {% elseif element_id == 'edit-benchmark-0' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-aicontent-1' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-aicontent-0' %}
+  <label for="{{ element['#id'] }}" class="form-check-label">
+    {{ element['#title'] }}
+  </label>
+  {% elseif element_id == 'edit-agree-terms' %}
+    {{ element['#title'] }}
+  {% elseif element_id == 'edit-content-challenge' %}
+  <label for="{{ element['#id'] }}" class="form-check-label mb-0 mt-2">
     {{ element['#title'] }}
   </label>
   {% elseif element_id == 'edit-product-variation-0' %}

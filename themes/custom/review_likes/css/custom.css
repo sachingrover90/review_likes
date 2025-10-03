@@ -76,3 +76,9 @@ span.fieldset-legend.js-form-required.form-required::after {
 .toggle-wrapper .affiliateToggle:checked + .slider:before {
   transform: translateX(26px);
 }
+
+
+.agree-terms {
+    margin-top: -26px;
+    margin-left: 23px;
+}

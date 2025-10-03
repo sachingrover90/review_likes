@@ -35,6 +35,10 @@
 <div class="row">
 {{ children }}
 </div>
+{% elseif element['#id'] == 'edit-termscondition-section' %}
+<div class="termscondition mt-3 mb-3">
+{{ children }}
+</div>
 {% else %}
 {{ children }}
 {% endif %}
