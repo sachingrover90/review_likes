@@ -41,6 +41,11 @@ class ProductTestingVideoForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#attributes']['class'][] = 'row';
 
+ $form['title'] = [
+      '#markup' => '<h2 class="text-center mb-4">Submit Your Product Testing Video</h2>',
+    ];
+
+
     // Product Link
     $form['product_link'] = [
       '#type' => 'textfield',
