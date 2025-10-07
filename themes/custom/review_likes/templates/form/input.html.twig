@@ -64,6 +64,13 @@
     {% elseif form_id == 'edit-benchmark-1' %}
      <input{{ attributes }} />
     {{ children }}
+    {% elseif form_id == 'edit-coupon-expiry-date' %}
+     <input{{ attributes.addClass('form-control') }} />
+    {{ children }}
+    {% elseif form_id == 'edit-bundle-expiry-date' %}
+     <input{{ attributes.addClass('form-control') }} />
+    {{ children }}
+    
 
     {% elseif form_id== 'edit-submit-all-products' %}
   <button{{ attributes.removeAttribute('value').setAttribute('type', 'submit').addClass('btn btn-default') }}>

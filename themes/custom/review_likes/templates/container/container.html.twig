@@ -31,7 +31,6 @@
 {% if  element['#name'] == 'product' %}
 {{ children }}
 {% elseif element['#id'] == 'edit-coupon-section' %}
-
 <div class="row">
 {{ children }}
 </div>
@@ -40,5 +39,8 @@
 {{ children }}
 </div>
 {% else %}
+<div{{ attributes }}>
 {{ children }}
+</div>
+
 {% endif %}

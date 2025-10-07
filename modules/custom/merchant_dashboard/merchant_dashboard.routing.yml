@@ -62,7 +62,16 @@ merchant_dashboard.product_testing_video_form:
   requirements:
     _permission: 'access merchant dashboard'   
 
+merchant_dashboard.discount_form:
+  path: '/merchant-dashboard/discount'
+  defaults:
+    _form: '\Drupal\merchant_dashboard\Form\DiscountForm'
+    _title: 'Create Discount'
+  requirements:
+    _permission: 'access merchant dashboard' 
         
+
+
 # marchant_dashboard.rebuttal_edit_form:
 #  path: '/rebuttal/{nid}/edit'
 #  defaults:

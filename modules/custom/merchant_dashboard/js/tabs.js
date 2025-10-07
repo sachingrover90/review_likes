@@ -16,7 +16,7 @@
         // console.log("🟢 Confirm delete for Node ID:", nidToDelete);
 
         if (nidToDelete) {
-                   $.ajax({
+          $.ajax({
             url: Drupal.url('claims-gifts/delete-node/' + nidToDelete),
             type: 'POST',
             data: { _drupal_ajax: true },
@@ -37,32 +37,32 @@
 })(jQuery, Drupal);
 
 
-(function($, Drupal) {
+(function ($, Drupal) {
   'use strict';
 
   Drupal.behaviors.couponToggle = {
-    attach: function(context, settings) {
+    attach: function (context, settings) {
       // console.log("=== COUPON TOGGLE DEBUG ===");
-      
+
       // Use context to ensure we're searching in the right scope
       // Look for the checkbox by its name or class
-      const toggle = context.querySelector('input[name="coupon_toggle"]') || 
-                    context.querySelector('.couponToggle') ||
-                    document.querySelector('input[name="coupon_toggle"]');
-      
-      const field = context.getElementById('paffliatelink') || 
-                   document.getElementById('paffliatelink');
-        
+      const toggle = context.querySelector('input[name="coupon_toggle"]') ||
+        context.querySelector('.couponToggle') ||
+        document.querySelector('input[name="coupon_toggle"]');
+
+      const field = context.getElementById('paffliatelink') ||
+        document.getElementById('paffliatelink');
+
       // console.log("Toggle found:", toggle);
       // console.log("Field found:", field);
-      
+
       if (!toggle) {
         console.error("Toggle checkbox not found! Searching for:");
         // console.log("input[name='coupon_toggle']:", context.querySelector('input[name="coupon_toggle"]'));
         // console.log(".couponToggle:", context.querySelector('.couponToggle'));
         return;
       }
-      
+
       if (!field) {
         console.error("Field not found!");
         return;
@@ -71,11 +71,11 @@
       function updateFieldState() {
         const isChecked = toggle.checked;
         // console.log("Toggle state changed:", isChecked);
-        
+
         // Toggle field properties
         field.disabled = !isChecked;
         field.required = isChecked;
-        
+
         // Visual feedback
         if (isChecked) {
           field.style.backgroundColor = "#ffffff";
@@ -93,22 +93,22 @@
       // Initialize
       // console.log("Initial toggle state:", toggle.checked);
       updateFieldState();
-      
+
       // Add event listeners
       toggle.addEventListener('change', updateFieldState);
       toggle.addEventListener('click', updateFieldState);
-      
+
       // Also handle slider click
       const slider = context.querySelector('.slider') || document.querySelector('.slider');
       if (slider) {
-        slider.addEventListener('click', function(e) {
+        slider.addEventListener('click', function (e) {
           e.preventDefault();
           toggle.checked = !toggle.checked;
           const event = new Event('change', { bubbles: true });
           toggle.dispatchEvent(event);
         });
       }
-      
+
       // console.log("Coupon toggle initialized successfully");
     }
   };
@@ -123,13 +123,57 @@
     }
   };
 })(jQuery, Drupal);
-document.getElementById('edit-order-id').addEventListener('input', function() {
-    this.value = this.value.replace(/[^0-9]/g, '');
-});
-document.getElementById('edit-shipping-zip').addEventListener('input', function() {
-    this.value = this.value.replace(/[^0-9]/g, '');
-});
 
-document.getElementById('edit-user-phone').addEventListener('input', function() {
-    this.value = this.value.replace(/[^0-9]/g, '');
-});
+(function($) {
+  'use strict';
+  
+  $(document).ready(function() {
+    // Event delegation for dynamic elements
+    $(document).on('input', '#edit-order-id', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    
+    $(document).on('input', '#edit-shipping-zip', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    
+    $(document).on('input', '#edit-user-phone', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  });
+  
+})(jQuery);
+
+
+(function($) {
+  'use strict';
+  
+  $(document).ready(function() { 
+    
+    // Check the form
+    var $form = $('#merchant-dashboard-discount-form');   
+    
+    // Check discount select
+    var $select = $('#edit-discount-type');    
+    
+    // Find all containers
+    var $containers = $('[id^="discount-container-"]');    
+    $containers.each(function() {
+    });    
+    // Simple toggle function
+    function toggleDiscounts() {
+      var value = $select.val();      
+      // Hide all
+      $containers.hide();      
+      // Show selected
+      if (value) {
+        $('#discount-container-' + value).show();
+      }
+    }    
+    // Bind event
+    $select.change(toggleDiscounts);    
+    // Initial state
+    toggleDiscounts();
+  });
+  
+})(jQuery);

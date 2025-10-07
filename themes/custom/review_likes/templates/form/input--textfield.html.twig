@@ -16,6 +16,52 @@
 {% elseif element_id == 'edit-combine' %}
   <input{{ attributes.addClass('form-control').setAttribute('placeholder', 'Search products...') }} />
   {{ children }}
+  {% elseif element_id == 'edit-flat-product-link' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-bundle-amount-before' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-flat-amount-before' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-bundle-product-link' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-bundle-now' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-bundle-amount-saved' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-bundle-expiry-date' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-flat-amount-saved' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-flat-now' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-coupon-code' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-coupon-expiry-date' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-coupon-amount-saved' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-coupon-now' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-coupon-amount-before' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  {% elseif element_id == 'edit-coupon-product-link' %}
+  <input{{ attributes.addClass('form-control')}} />
+  {{ children }}
+  
 {% else %}
 {# {{ dump(element['#id']) }} #}
 <input{{ attributes }} />
