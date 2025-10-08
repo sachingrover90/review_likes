@@ -70,6 +70,9 @@
     {% elseif form_id == 'edit-bundle-expiry-date' %}
      <input{{ attributes.addClass('form-control') }} />
     {{ children }}
+    {% elseif form_id == 'edit-attach-file-upload' %}
+     <input{{ attributes.addClass('form-control') }} />
+    {{ children }}
     
 
     {% elseif form_id== 'edit-submit-all-products' %}

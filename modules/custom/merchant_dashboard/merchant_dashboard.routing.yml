@@ -70,7 +70,21 @@ merchant_dashboard.discount_form:
   requirements:
     _permission: 'access merchant dashboard' 
         
+merchant_dashboard.admin_support:
+  path: '/merchant/admin-support'
+  defaults:
+    _form: '\Drupal\merchant_dashboard\Form\AdminSupportForm'
+    _title: 'Admin Support'
+  requirements:
+    _permission: 'access merchant dashboard' 
 
+merchant_dashboard.scam_buyers:
+  path: '/merchant/scam-buyers'
+  defaults:
+    _form: '\Drupal\merchant_dashboard\Form\ScamBuyersForm'
+    _title: 'Scam Buyers'
+  requirements:
+    _permission: 'access merchant dashboard'     
 
 # marchant_dashboard.rebuttal_edit_form:
 #  path: '/rebuttal/{nid}/edit'

@@ -18,6 +18,14 @@
     'form-managed-file',
   ]
 %}
+{# {{ dump(element['#id']) }} #}
+{% set image_id = element['#id'] %}
+{% if image_id == 'edit-attach-file' %}
+<div class="col-12 col-md-6">
+  {{ element }}
+</div>
+{% else %}
 <div class="input-group">
   {{ element }}
 </div>
+{% endif %}
