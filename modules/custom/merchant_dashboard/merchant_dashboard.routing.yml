@@ -84,8 +84,33 @@ merchant_dashboard.scam_buyers:
     _form: '\Drupal\merchant_dashboard\Form\ScamBuyersForm'
     _title: 'Scam Buyers'
   requirements:
-    _permission: 'access merchant dashboard'     
+    _permission: 'access merchant dashboard' 
 
+
+merchant_dashboard.discount_edit:
+  path: '/merchant/{node}/edit-discount'
+  defaults:
+    _title: 'Edit Discount'
+    _form: '\Drupal\merchant_dashboard\Form\DiscountEditForm'
+  requirements:
+    _custom_access: '\Drupal\merchant_dashboard\Form\DiscountEditForm::access'
+    _entity_access: 'node.update'
+  options:
+    parameters:
+      node:
+        type: entity:node
+
+merchant_dashboard.delete_discount:
+  path: '/merchant/delete-node/{node}'
+  defaults:
+    _controller: '\Drupal\merchant_dashboard\Controller\ClaimsGiftsNodeDeleteController::unpublishNode'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'node.delete'
+  options:
+    parameters:
+      node:
+        type: entity:node
 # marchant_dashboard.rebuttal_edit_form:
 #  path: '/rebuttal/{nid}/edit'
 #  defaults:

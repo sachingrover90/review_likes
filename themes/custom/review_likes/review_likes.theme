@@ -337,15 +337,15 @@ function review_likes_preprocess_page(&$variables) {
             ? $gift->field_telephone->value 
             : NULL,
          'commerce_platform' => $gift->hasField('field_e_commerce_platform') && !$gift->get('field_e_commerce_platform')->isEmpty()
-  ? $gift->get('field_e_commerce_platform')->entity->label()
-  : NULL,
+            ? $gift->get('field_e_commerce_platform')->entity->label()
+            : NULL,
 
-          'image' => $gift->hasField('field_image') && !$gift->field_image->isEmpty() 
-  ? [
-      'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($gift->field_image->entity->getFileUri()),
-      'alt' => $gift->field_image->alt,
-    ] 
-  : NULL,
+                    'image' => $gift->hasField('field_image') && !$gift->field_image->isEmpty() 
+            ? [
+                'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($gift->field_image->entity->getFileUri()),
+                'alt' => $gift->field_image->alt,
+              ] 
+            : NULL,
 
           'date' => $gift->hasField('field_order_datetime') && !$gift->field_order_datetime->isEmpty() 
             ? $gift->field_order_datetime->value 
@@ -392,14 +392,14 @@ function review_likes_preprocess_page(&$variables) {
             ? $claim->field_telephone->value 
             : NULL,
              'commerce_platform' => $claim->hasField('field_e_commerce_platform') && !$claim->get('field_e_commerce_platform')->isEmpty()
-  ? $claim->get('field_e_commerce_platform')->entity->label()
-  : NULL,
-          'image' => $claim->hasField('field_image') && !$claim->field_image->isEmpty() 
-  ? [
-      'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($claim->field_image->entity->getFileUri()),
-      'alt' => $claim->field_image->alt,
-    ] 
-  : NULL,
+            ? $claim->get('field_e_commerce_platform')->entity->label()
+            : NULL,
+                    'image' => $claim->hasField('field_image') && !$claim->field_image->isEmpty() 
+            ? [
+                'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($claim->field_image->entity->getFileUri()),
+                'alt' => $claim->field_image->alt,
+              ] 
+            : NULL,
 
           'date' => $claim->hasField('field_order_datetime') && !$claim->field_order_datetime->isEmpty() 
             ? $claim->field_order_datetime->value 
@@ -409,56 +409,62 @@ function review_likes_preprocess_page(&$variables) {
         ];
       }
     }
+
   }
+
+if ($route_name == 'merchant_dashboard.discount_form') {
+    $variables['is_claims_gifts_page'] = TRUE;
+    
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    
+    // Load Discount content type nodes
+    $discount_query = $node_storage->getQuery()
+      ->condition('type', 'discount')
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+    
+    $discount_nids = $discount_query->execute();
+    
+    if ($discount_nids) {
+      $discount_nodes = $node_storage->loadMultiple($discount_nids);
+      $variables['claims'] = [];
+      
+      foreach ($discount_nodes as $discount) {
+        $variables['claims'][] = [
+          'id' => $discount->id(),
+          'title' => $discount->getTitle(),
+          'amount_saved' => $discount->hasField('field_legal_business_name') && !$discount->field_legal_business_name->isEmpty() 
+            ? $discount->field_legal_business_name->value 
+            : '',
+          'before' => $discount->hasField('field_buyer_username') && !$discount->field_buyer_username->isEmpty() 
+            ? $discount->field_buyer_username->value 
+            : '0',
+          'coupon_code' => $discount->hasField('field_external_id') && !$discount->field_external_id->isEmpty() 
+            ? $discount->field_external_id->value 
+            : 'NA',
+          'multi_use' => $discount->hasField('field_terms_and_conditions') && !$discount->field_terms_and_conditions->isEmpty() 
+            ? 'Yes' 
+            : 'No',
+          'now' => $discount->hasField('field_comment_text') && !$discount->field_comment_text->isEmpty() 
+            ? $discount->field_comment_text->value 
+            : '0',
+          'filter' => $discount->hasField('field_filter') && !$discount->get('field_filter')->isEmpty()
+            ? $discount->get('field_filter')->entity->label()
+            : NULL,
+          // Add product link field - you'll need to create this field or map to existing field
+          'product_link' => $discount->hasField('field_product_link') && !$discount->field_product_link->isEmpty() 
+            ? $discount->field_product_link->value 
+            : '#',
+          'created_timestamp' => $discount->getCreatedTime(),
+          'changed_timestamp' => $discount->getChangedTime(),
+        ];
+      }
+    } else {
+      $variables['claims'] = [];
+    }
+}
+
 }
 
 
-// In your .theme file or module
-// function review_likes_preprocess_page(&$variables) {
-//   if (isset($variables['is_claims_gifts_page']) && $variables['is_claims_gifts_page']) {
-//     // Load claims nodes
-//     $claim_nodes = \Drupal::entityTypeManager()
-//       ->getStorage('node')
-//       ->loadByProperties(['type' => 'rebuttal', 'status' => 1]);
-    
-//     $claims = [];
-//     foreach ($claim_nodes as $node) {
-//       $claims[] = [
-//         'title' => $node->getTitle(),
-//         'description' => $node->body->value,
-//         'status' => $node->field_status->value,
-//         'date' => $node->field_order_date->value,
-//         'created' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'Y-m-d H:i'),
-//         'created_timestamp' => $node->getCreatedTime(),
-//         'changed' => \Drupal::service('date.formatter')->format($node->getChangedTime(), 'custom', 'Y-m-d H:i'),
-//         'changed_timestamp' => $node->getChangedTime(),
-//       ];
-//     }
-    
-//     // Load gifts nodes
-//     $gift_nodes = \Drupal::entityTypeManager()
-//       ->getStorage('node')
-//       ->loadByProperties(['type' => 'gift', 'status' => 1]);
-    
-//     $gifts = [];
-//     foreach ($gift_nodes as $node) {
-//       $gifts[] = [
-//         'title' => $node->getTitle(),
-//         'description' => $node->body->value,
-//         'image' => [
-//           'url' => $node->field_image->entity ? $node->field_image->entity->url() : '',
-//           'alt' => $node->field_image->alt ?: '',
-//         ],
-//         'price' => $node->field_price->value,
-//         'date' => $node->field_expiry_date->value,
-//         'created' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'custom', 'Y-m-d H:i'),
-//         'created_timestamp' => $node->getCreatedTime(),
-//         'changed' => \Drupal::service('date.formatter')->format($node->getChangedTime(), 'custom', 'Y-m-d H:i'),
-//         'changed_timestamp' => $node->getChangedTime(),
-//       ];
-//     }
-    
-//     $variables['claims'] = $claims;
-//     $variables['gifts'] = $gifts;
-//   }
-// }

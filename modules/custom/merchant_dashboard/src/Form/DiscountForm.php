@@ -347,7 +347,7 @@ class DiscountForm extends FormBase {
     $term_map = $form['#term_map'];
 
     // Debug: Check what values we're getting
-    \Drupal::logger('merchant_dashboard')->notice('Form values: @values', ['@values' => print_r($values, TRUE)]);
+    // \Drupal::logger('merchant_dashboard')->notice('Form values: @values', ['@values' => print_r($values, TRUE)]);
 
     // Prepare node data based on discount type
     $node_data = [
@@ -423,7 +423,7 @@ class DiscountForm extends FormBase {
     }
 
     // Debug node data before saving
-    \Drupal::logger('merchant_dashboard')->notice('Node data to save: @data', ['@data' => print_r($node_data, TRUE)]);
+    // \Drupal::logger('merchant_dashboard')->notice('Node data to save: @data', ['@data' => print_r($node_data, TRUE)]);
 
     try {
       // Create and save the node
