@@ -3,13 +3,16 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.discount
     - node.type.gift
     - node.type.marchant_products
     - node.type.rebuttal
+    - taxonomy.vocabulary.discount_type
   module:
     - merchant_dashboard
     - node
     - role_based_registration
+    - taxonomy
 id: merchant
 label: Merchants
 weight: 4
@@ -17,9 +20,13 @@ is_admin: false
 permissions:
   - 'access merchant dashboard'
   - 'create product content'
+  - 'delete any discount content'
   - 'delete any marchant_products content'
   - 'delete any rebuttal content'
   - 'delete own marchant_products content'
+  - 'delete terms in discount_type'
+  - 'edit any discount content'
   - 'edit any gift content'
   - 'edit any marchant_products content'
   - 'edit any rebuttal content'
+  - 'edit terms in discount_type'
