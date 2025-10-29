@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_address
     - field.field.user.user.field_checkbox
     - field.field.user.user.field_country
     - field.field.user.user.field_first_name
@@ -10,6 +11,8 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_mobile_number
     - field.field.user.user.field_phone_number
+    - field.field.user.user.field_state
+    - field.field.user.user.field_zip
     - field.field.user.user.user_picture
   module:
     - country
@@ -26,6 +29,14 @@ content:
     weight: 0
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_address:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_checkbox:
     type: boolean_checkbox
@@ -57,6 +68,22 @@ content:
   field_phone_number:
     type: string_textfield
     weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_state:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_zip:
+    type: string_textfield
+    weight: 9
     region: content
     settings:
       size: 60

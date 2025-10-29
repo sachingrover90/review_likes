@@ -65,17 +65,7 @@
 {% set element_id = element['#id'] ?? '' %}
 
 {% set allowed_ids = [
-  'edit-first-name', 'edit-last-name', 'edit-country', 'edit-language',  'edit-email',  'edit-mobile-country-code',
-  'edit-mobile-mobile',  'edit-platforms-wrapper-platforms-0-price',  'edit-platforms-wrapper-platforms-0-link',
-  'edit-platforms-wrapper-platforms-0-coupon',  'edit-affiliated-link',  'edit-title',  'edit-sold-by',  'edit-tests-done',
-  'edit-keywords',  'edit-rating',  'edit-price',  'edit-description',  'edit-image--label',  'edit-product-id',
-  'edit-screenshot--label',  'edit-product-link',  'edit-buyer-username',  'edit-repeat-username',  'edit-order-id',
-  'edit-shipping-street',  'edit-shipping-apartment',  'edit-shipping-city',  'edit-shipping-state',  'edit-shipping-zip',
-  'edit-user-email',  'edit-user-phone',  'edit-ecommerce-platform',  'edit-coupon',  'edit-order-datetime-date',
-  'edit-video-link',  'edit-product-name','edit-discount-type','edit-flat-product-link','edit-flat-amount-before','edit-bundle-product-link','edit-bundle-amount-before','edit-bundle-now','edit-bundle-amount-saved','edit-bundle-expiry-date','edit-bundle-multi-use',
-  'edit-coupon-product-link','edit-coupon-amount-before','edit-coupon-now','edit-coupon-amount-saved','edit-coupon-expiry-date','edit-coupon-multi-use','edit-coupon-code','edit-flat-now','edit-flat-amount-saved','edit-flat-multi-use','edit-custom-product-link',
-  'edit-subject','edit-case-id','edit-describe','edit-attach-file--label','edit-customer-name','edit-platform','edit-tracking'
-  
+ 
 
 ] %}
 
@@ -121,6 +111,10 @@
   <label for="{{ element['#id'] }}" class="form-check-label">
     {{ element['#title'] }}
   </label>
+  {% else %}
+  <label for="{{ element['#id'] }}" class="required mb-2">
+   {{ element['#title'] }}
+   </label>
 {% endif %}
  {# <label for="{{ element['#id'] }}" class="required mb-2">
  {{ element['#title'] }}
@@ -141,6 +135,9 @@
   {% if label_display == 'after' %}
     {{ label }}
   {% endif %}
+   {# <label for="{{ element['#id'] }}" class="required mb-2">
+   {{ element['#title'] }}
+   </label> #}
   {% if errors %}
     <div class="form-item--error-message">{{ errors }}</div>
   {% endif %}

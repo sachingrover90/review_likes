@@ -5,8 +5,11 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.merchant.field_brand_name
+    - field.field.node.merchant.field_external_id
     - field.field.node.merchant.field_legal_business_name
+    - field.field.node.merchant.field_platform_link
     - field.field.node.merchant.field_platform_links
+    - field.field.node.merchant.field_product_url
     - field.field.node.merchant.field_store_link
     - node.type.merchant
   module:
@@ -23,6 +26,9 @@ content:
     region: content
 hidden:
   field_brand_name: true
+  field_external_id: true
   field_legal_business_name: true
+  field_platform_link: true
   field_platform_links: true
+  field_product_url: true
   field_store_link: true

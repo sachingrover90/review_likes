@@ -26,4 +26,4 @@ visibility:
   request_path:
     id: request_path
     negate: false
-    pages: "/product/create\r\n/product/*\r\n/all-products\r\n/merchant/claims-gifts\r\n/claims-gifts/*\r\n/merchant/product-testing-video\r\n/merchant-dashboard/discount\r\n/merchant/admin-support\r\n/merchant/scam-buyers"
+    pages: "/product/create\r\n/product/*\r\n/all-products\r\n/merchant/claims-gifts\r\n/claims-gifts/*\r\n/merchant/product-testing-video\r\n/merchant-dashboard/discount\r\n/merchant/admin-support\r\n/merchant/scam-buyers\r\n/merchant/business-registration\r\n/merchant/hire-tester"

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.user.compact
+    - field.field.user.user.field_address
     - field.field.user.user.field_checkbox
     - field.field.user.user.field_country
     - field.field.user.user.field_first_name
@@ -11,6 +12,8 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_mobile_number
     - field.field.user.user.field_phone_number
+    - field.field.user.user.field_state
+    - field.field.user.user.field_zip
     - field.field.user.user.user_picture
     - image.style.thumbnail
   module:
@@ -36,6 +39,7 @@ content:
     region: content
 hidden:
   blog__personal_blog_link: true
+  field_address: true
   field_checkbox: true
   field_country: true
   field_first_name: true
@@ -43,4 +47,6 @@ hidden:
   field_last_name: true
   field_mobile_number: true
   field_phone_number: true
+  field_state: true
+  field_zip: true
   member_for: true

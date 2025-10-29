@@ -111,6 +111,14 @@ merchant_dashboard.delete_discount:
     parameters:
       node:
         type: entity:node
+
+merchant_dashboard.hire_tester:
+  path: '/merchant/hire-tester'
+  defaults:
+    _title: 'Hire a Tester'
+    _form: '\Drupal\merchant_dashboard\Form\HireTesterForm'
+  requirements:
+    _permission: 'access merchant dashboard'         
 # marchant_dashboard.rebuttal_edit_form:
 #  path: '/rebuttal/{nid}/edit'
 #  defaults:
