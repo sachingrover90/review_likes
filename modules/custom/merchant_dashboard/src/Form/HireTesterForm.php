@@ -30,7 +30,7 @@ class HireTesterForm extends FormBase {
     ];
     // Section 1 - Product & Testing Details
     $form['section_1'] = [
-      // '#type' => 'fieldset',
+      '#type' => 'fieldset',
       '#title' => $this->t('Section 1 — Product & Testing Details:'),
       '#attributes' => ['class' => ['section-fieldset']],
       
@@ -38,28 +38,46 @@ class HireTesterForm extends FormBase {
 
     // Product Category - Load from taxonomy - RADIO BUTTONS
     $product_categories = $this->getTaxonomyTerms('product_category');
-    $form['section_1']['product_category'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Product Category'),
-      '#required' => TRUE,
-      '#options' => $product_categories,
-      '#attributes' => ['class' => ['product-category-radios']],
-      '#prefix' => '<div class="mb-3"><label class="required mb-2">',
-      '#suffix' => '</label>',
-      '#prefix' => '<div class="row">',
-      '#suffix' => '</div>',
-    ];
+$product_categories = $this->getTaxonomyTerms('product_category');
+foreach ($product_categories as $term_id => $term_name) {
+  \Drupal::logger('merchant_dashboard')->notice('Term ID: @id, Name: @name', [
+    '@id' => $term_id,
+    '@name' => $term_name,
+  ]);
+}
+// Ensure taxonomy terms are loaded
+$product_categories = $this->getTaxonomyTerms('product_category');
 
-    // Add "Other" option for product category
-    $form['section_1']['product_category_other'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Other Product Category'),
-      '#states' => [
-        'visible' => [
-          ':input[name="product_category"]' => ['value' => 'other'],
-        ],
-      ],
-    ];
+$form['section_1']['product_category'] = [
+  '#type' => 'radios',
+  '#title' => $this->t('Product Category'),
+  '#required' => TRUE,
+  '#options' => $product_categories,
+  '#attributes' => ['class' => ['product-category-radios']],
+  '#prefix' => '<div class="row mb-3">',
+  '#suffix' => '</div>',
+];
+
+$form['section_1']['product_category_other'] = [
+  '#type' => 'textfield',
+  // '#title' => $this->t('Other Product Category'),
+  // '#description' => $this->t('Required when "Other" is selected'),
+  // '#attributes' => ['class' => ['product-category-other-field']],
+  '#attributes' => [
+    'class' => ['product-category-other-wrapper', 'js-form-wrapper', 'form-wrapper'],
+  ],
+];
+
+// Add custom JavaScript
+$form['#attached']['library'][] = 'core/jquery';
+$form['#attached']['drupalSettings']['merchant_dashboard'] = [
+  'other_term_id' => '23'
+];
+
+$form['#attached']['library'][] = 'merchant_dashboard/tabs';
+
+// Attach Drupal states library
+$form['#attached']['library'][] = 'core/drupal.states';
 
     // Testing Type - Load from taxonomy - RADIO BUTTONS
     $testing_types = $this->getTaxonomyTerms('testing_type');
@@ -74,12 +92,10 @@ class HireTesterForm extends FormBase {
     // Add "Other" option for testing type
     $form['section_1']['testing_type_other'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Other Testing Type'),
-      '#states' => [
-        'visible' => [
-          ':input[name="testing_type"]' => ['value' => 'other'],
-        ],
-      ],
+      // '#title' => $this->t('Other Testing Type'),
+       '#attributes' => [
+    'class' => ['product-category-other-wrapper', 'js-form-wrapper', 'form-wrapper'],
+  ],
     ];
 
     // Tester Type Needed - Load from taxonomy - RADIO BUTTONS
@@ -107,12 +123,9 @@ class HireTesterForm extends FormBase {
     // Other tester type
     $form['section_1']['tester_type_other'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Other Tester Type'),
-      '#states' => [
-        'visible' => [
-          ':input[name="tester_type"]' => ['value' => 'other'],
-        ],
-      ],
+         '#attributes' => [
+    'class' => ['product-category-other-wrapper', 'js-form-wrapper', 'form-wrapper'],
+  ],
       '#suffix' => '</div>',
     ];
 
@@ -124,27 +137,29 @@ class HireTesterForm extends FormBase {
     ];
 
     // Gender Preference - Load from field_gender_preference allowed values - RADIO BUTTONS
-    $gender_preference_options = $this->getFieldAllowedValues('node', 'hire_tester', 'field_gender_preference');
-    $form['section_2']['gender_preference'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Gender Preference'),
-      '#required' => FALSE,
-      '#options' => $gender_preference_options,
-      '#attributes' => [
-        'class' => ['gender-preference-radios'],
-      ],
-    ];
+   $gender_preference_options = $this->getFieldAllowedValues('node', 'hire_tester', 'field_gender_preference');
+$form['section_2']['gender_preference'] = [
+  '#type' => 'radios',
+  '#title' => $this->t('Gender Preference'),
+  '#required' => FALSE,
+  '#options' => $gender_preference_options,
+  '#attributes' => [
+    'class' => ['gender-preference-radios'],
+  ],
+];
 
-    // Other gender specification
-    $form['section_2']['gender_preference_other'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Specify Other Gender'),
-      '#states' => [
-        'visible' => [
-          ':input[name="gender_preference"]' => ['value' => 'other'],
-        ],
-      ],
-    ];
+// Other gender specification
+$form['section_2']['gender_preference_other'] = [
+  '#type' => 'textfield',
+  // '#title' => $this->t('Specify Other Gender'),
+  // '#description' => $this->t('Please specify your gender preference'),
+  '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
+  // '#wrapper_attributes' => [ // Add wrapper attributes for better targeting
+  //   'class' => ['gender-preference-other-wrapper'],
+  // ],
+];
 
     // Age Range - Load from field_age_range allowed values - RADIO BUTTONS
     $age_range_options = $this->getFieldAllowedValues('node', 'hire_tester', 'field_age_range');
@@ -230,13 +245,11 @@ class HireTesterForm extends FormBase {
     
     $form['section_3']['sports_specification'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Specify Sports'),
-      '#placeholder' => $this->t('e.g., basketball, swimming, etc.'),
-      '#states' => [
-        'visible' => [
-          ':input[name="physical_abilities"]' => ['value' => 'sports'],
-        ],
-      ],
+      // '#title' => $this->t('Specify Other Gender'),
+  // '#description' => $this->t('Please specify your gender preference'),
+  '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // On-Camera Preferences - RADIO BUTTONS
@@ -297,13 +310,10 @@ class HireTesterForm extends FormBase {
     // Smartphone specs
     $form['section_4']['smartphone_specs'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Smartphone Specs'),
-      '#placeholder' => $this->t('e.g., iPhone 12+, Samsung Galaxy S20+, etc.'),
-      '#states' => [
-        'visible' => [
-          ':input[name="camera_requirements"]' => ['value' => 'smartphone'],
-        ],
-      ],
+      // '#title' => $this->t('Smartphone Specs'),
+      '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // Audio / Stabilization - RADIO BUTTONS
@@ -352,8 +362,10 @@ class HireTesterForm extends FormBase {
     // Specific regions
     $form['section_5']['specific_regions'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Specific Regions'),
-      '#placeholder' => $this->t('e.g., North America, Europe, Asia, etc.'),
+        // '#title' => $this->t('Smartphone Specs'),
+      '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // Safety Gear Needed - RADIO BUTTONS
@@ -372,12 +384,9 @@ class HireTesterForm extends FormBase {
     // Other safety gear specification
     $form['section_5']['safety_gear_other'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Specify Other Safety Gear'),
-      '#states' => [
-        'visible' => [
-          ':input[name="safety_gear_needed"]' => ['value' => 'other'],
-        ],
-      ],
+       '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // Licenses/Certifications Required - RADIO BUTTONS
@@ -395,12 +404,9 @@ class HireTesterForm extends FormBase {
     // Other license specification
     $form['section_5']['licenses_other'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Specify Other License/Certification'),
-      '#states' => [
-        'visible' => [
-          ':input[name="licenses_certifications"]' => ['value' => 'other'],
-        ],
-      ],
+       '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // Section 6 — Social Media & Audience
@@ -425,12 +431,9 @@ class HireTesterForm extends FormBase {
     // Other platform specification
     $form['section_6']['platform_other'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Specify Other Platform'),
-      '#states' => [
-        'visible' => [
-          ':input[name="platform_preferences"]' => ['value' => 'other'],
-        ],
-      ],
+      '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // Minimum Follower Count - RADIO BUTTONS
@@ -460,12 +463,9 @@ class HireTesterForm extends FormBase {
     // Other content style specification
     $form['section_6']['content_style_other'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Specify Other Content Style'),
-      '#states' => [
-        'visible' => [
-          ':input[name="content_style"]' => ['value' => 'other'],
-        ],
-      ],
+      '#attributes' => [
+    'class' => ['gender-preference-other-field gender-preference-other-wrapper'], // Changed class name
+  ],
     ];
 
     // Section 7 — Budget & Timeline
@@ -542,17 +542,27 @@ class HireTesterForm extends FormBase {
       '#suffix' => '</div>',
     ];
 
-    // Budget Flexibility - RADIO BUTTONS
+    // Budget Flexibility - RADIO BUTTONS 
+    // $form['section_7']['budget_flexibility'] = [
+    //   '#type' => 'radios',
+    //   '#title' => $this->t('Budget Flexibility'),
+    //   '#required' => FALSE,
+    //   '#options' => [
+    //     'strict_budget' => $this->t('Strict Budget'),
+    //     'flexible' => $this->t('Flexible (Pay for quality)'),
+    //   ],
+    //   '#attributes' => [
+    //     'class' => ['budget-flexibility-radios'],
+    //   ],
+    // ];
+     $Flexibility = $this->getFieldAllowedValues('node', 'hire_tester', 'field_budget_flexibility');
     $form['section_7']['budget_flexibility'] = [
       '#type' => 'radios',
-      '#title' => $this->t('Budget Flexibility'),
+      '#title' => $this->t('Flexibility'),
       '#required' => FALSE,
-      '#options' => [
-        'strict_budget' => $this->t('Strict Budget'),
-        'flexible' => $this->t('Flexible (Pay for quality)'),
-      ],
+      '#options' => $Flexibility,
       '#attributes' => [
-        'class' => ['budget-flexibility-radios'],
+        'class' => ['content-style-radios'],
       ],
     ];
 
@@ -570,17 +580,14 @@ class HireTesterForm extends FormBase {
     ];
 
     // Urgency - RADIO BUTTONS
+     $urgency = $this->getFieldAllowedValues('node', 'hire_tester', 'field_urgency');
     $form['section_7']['urgency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Urgency'),
       '#required' => FALSE,
-      '#options' => [
-        'asap' => $this->t('ASAP'),
-        'within_1_week' => $this->t('Within 1 Week'),
-        'flexible' => $this->t('Flexible'),
-      ],
+      '#options' => $urgency,
       '#attributes' => [
-        'class' => ['urgency-radios'],
+        'class' => ['content-style-radios'],
       ],
     ];
 
@@ -634,6 +641,8 @@ class HireTesterForm extends FormBase {
 
     // Add CSS for styling
     $form['#attached']['library'][] = 'merchant_dashboard/tabs';
+    $form['#attached']['library'][] = 'core/drupal.states';
+    
 
     return $form;
   }
@@ -658,7 +667,7 @@ class HireTesterForm extends FormBase {
     }
 
     // Add "Other" option for radio buttons
-    $options['other'] = $this->t('Other');
+    // $options['other'] = $this->t('Other');
 
     return $options;
   }
@@ -860,16 +869,21 @@ class HireTesterForm extends FormBase {
       'type' => 'hire_tester',
       'title' => 'Tester Request - ' . $values['product_name'],
       'uid' => $current_user->id(),
+      'field_legal_business_name' =>  $values['weight_range'],
+    'field_buyer_username' =>  $values['shoe_size'],
+    'field_sold_bys' =>  $values['height_range'],
+    'field_image' =>  $values['product_images'],
+    'field_external_id' =>  $values['key_features'],
     ];
 
     // Section 1 fields - Radio buttons (single values)
-    if (!empty($product_category) && $product_category != 'other') {
+    if (!empty($product_category)) {
       $node_data['field_e_commerce_platform'] = [$product_category];
     }
     if (!empty($testing_type) && $testing_type != 'other') {
       $node_data['field_filter'] = [$testing_type];
     }
-    if (!empty($tester_type) && $tester_type != 'other') {
+    if (!empty($tester_type)) {
       $node_data['field_tester_type_needed'] = [$tester_type];
     }
     if (!empty($values['product_category_other'])) {
@@ -881,18 +895,18 @@ class HireTesterForm extends FormBase {
     if (!empty($values['skilled_expert_specification'])) {
       $node_data['field_skilled_expert_specification'] = $values['skilled_expert_specification'];
     }
-    if (!empty($values['tester_type_other'])) {
-      $node_data['field_tester_type_other'] = $values['tester_type_other'];
-    }
+    // if (!empty($values['tester_type_other'])) {
+    //   $node_data['field_tester_type_other'] = $values['tester_type_other'];
+    // }
 
     // Section 2 fields
-    if (!empty($gender_preference) && $gender_preference != 'other') {
+    if (!empty($gender_preference)) {
       $node_data['field_gender_preference'] = [$gender_preference];
     }
     if (!empty($values['gender_preference_other'])) {
       $node_data['field_gender_preference_other'] = $values['gender_preference_other'];
     }
-    if (!empty($age_range) && $age_range != 'no_preference') {
+    if (!empty($age_range)) {
       $node_data['field_age_range'] = [$age_range];
     }
     if (!empty($values['height_range'])) {
@@ -911,7 +925,7 @@ class HireTesterForm extends FormBase {
       $node_data['field_languages_spoken_other'] = $values['languages_spoken_other'];
     }
      // Section 3 fields
-    if (!empty($physical_abilities) && $physical_abilities != 'sports') {
+    if (!empty($physical_abilities)) {
       $node_data['field_physical_abilities'] = [$physical_abilities];
     }
     if (!empty($values['sports_specification'])) {
@@ -928,7 +942,7 @@ class HireTesterForm extends FormBase {
     }
 
     // Section 4 fields
-    if (!empty($camera_requirements) && $camera_requirements != 'smartphone') {
+    if (!empty($camera_requirements)) {
       $node_data['field_camera_requirements'] = [$camera_requirements];
     }
     if (!empty($values['smartphone_specs'])) {
@@ -947,13 +961,13 @@ class HireTesterForm extends FormBase {
     if (!empty($values['specific_regions'])) {
       $node_data['field_specific_regions'] = $values['specific_regions'];
     }
-    if (!empty($safety_gear_needed) && $safety_gear_needed != 'other' && $safety_gear_needed != 'none') {
+    if (!empty($safety_gear_needed)) {
       $node_data['field_safety_gear_needed'] = [$safety_gear_needed];
     }
     if (!empty($values['safety_gear_other'])) {
       $node_data['field_safety_gear_other'] = $values['safety_gear_other'];
     }
-    if (!empty($licenses_certifications) && $licenses_certifications != 'other' && $licenses_certifications != 'none') {
+    if (!empty($licenses_certifications)) {
       $node_data['field_licenses_certifications_re'] = [$licenses_certifications];
     }
     if (!empty($values['licenses_other'])) {
@@ -961,16 +975,16 @@ class HireTesterForm extends FormBase {
     }
 
     // Section 6 fields
-    if (!empty($platform_preferences) && $platform_preferences != 'other') {
+    if (!empty($platform_preferences)) {
       $node_data['field_platform_preferences'] = [$platform_preferences];
     }
     if (!empty($values['platform_other'])) {
       $node_data['field_platform_other'] = $values['platform_other'];
     }
-    if (!empty($follower_count) && $follower_count != 'no_preference') {
+    if (!empty($follower_count)) {
       $node_data['field_minimum_follower_count'] = [$follower_count];
     }
-    if (!empty($content_style) && $content_style != 'other') {
+    if (!empty($content_style)) {
       $node_data['field_content_style'] = [$content_style];
     }
     if (!empty($values['content_style_other'])) {

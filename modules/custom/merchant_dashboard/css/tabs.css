@@ -46,33 +46,23 @@
   display: none !important;
 }
 
-/* .slider {
-  position: relative !important;
-  display: inline-block !important;
-  width: 50px !important;
-  height: 24px !important;
-  background-color: #ccc !important;
-  border-radius: 24px !important;
-  margin-right: 10px !important;
-  transition: .4s !important;
+.form-item-product-category-other,
+.js-form-item-product-category-other {
+  display: none;
 }
 
-.slider:before {
-  position: absolute !important;
-  content: "" !important;
-  height: 16px !important;
-  width: 16px !important;
-  left: 4px !important;
-  bottom: 4px !important;
-  background-color: white !important;
-  border-radius: 50% !important;
-  transition: .4s !important;
+/* Hide all other fields by default */
+.form-item-product-category-other,
+.form-item-testing-type-other,
+.form-item-tester-type-other,
+.js-form-item-product-category-other, 
+.js-form-item-testing-type-other,
+.js-form-item-tester-type-other {
+  display: none;
+}
+/* Hide gender other field by default */
+.form-item-gender-preference-other,
+.js-form-item-gender-preference-other {
+  display: none;
 }
 
-.couponToggle:checked + .slider {
-  background-color: #2196F3 !important;
-}
-
-.couponToggle:checked + .slider:before {
-  transform: translateX(26px) !important;
-} */
