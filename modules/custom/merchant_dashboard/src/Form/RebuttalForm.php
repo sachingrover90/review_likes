@@ -30,11 +30,11 @@ class RebuttalForm extends FormBase {
       '#markup' => '<h2 class="text-center mb-2">Rebuttal</h2>
                    <h6 class="text-center mb-5">(We encourage you to fill all possible info about the customer. It will help us track fast and respond to your concern.)</h6>',
     ];
-$form['coupon_section'] = [
-  '#type' => 'container',
-  '#attributes' => ['class' => ['row']],
-];
-    // Create a simpler container structure
+      $form['coupon_section'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['row']],
+      ];
+          // Create a simpler container structure
     $form['coupon_section']['screenshot'] = [
       '#type' => 'managed_file',
       '#title' => $this->t('Screenshot of User Comment'),
@@ -178,20 +178,20 @@ $form['coupon_section'] = [
     ];
      
      // Order Date & Time - ensure it's configured correctly
-  $form['order_datetime'] = [
-  '#type' => 'datetime',
-  // '#title' => $this->t('Order Date & Time'),
-  '#required' => TRUE,
-  '#attributes' => ['class' => ['form-control']],
-  '#default_value' => NULL,
-  '#date_date_format' => 'Y-m-d',
-  '#date_time_format' => 'H:i:s',
-  '#date_date_element' => 'date',
-  '#date_time_element' => 'time',
-  '#date_timezone' => date_default_timezone_get(),
-  '#prefix' => '<div class="row"><div class="col-md-6 mb-3">',
-  '#suffix' => '</div>',
-];
+      $form['order_datetime'] = [
+      '#type' => 'datetime',
+      // '#title' => $this->t('Order Date & Time'),
+      '#required' => TRUE,
+      '#attributes' => ['class' => ['form-control']],
+      '#default_value' => NULL,
+      '#date_date_format' => 'Y-m-d',
+      '#date_time_format' => 'H:i:s',
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'time',
+      '#date_timezone' => date_default_timezone_get(),
+      '#prefix' => '<div class="row"><div class="col-md-6 mb-3">',
+      '#suffix' => '</div>',
+    ];
      
    
 

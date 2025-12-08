@@ -366,6 +366,8 @@ protected function getLanguageOptions() {
     $this->user->save();
 if ($this->user->hasRole('merchant')) {
     $form_state->setRedirect('role_based_registration.product_form');
+  }elseif($this->user->hasRole('tester')){
+  $form_state->setRedirect('tester_dashboard.dashboard');
   }
     else {
     // Optional: redirect others to profile or homepage

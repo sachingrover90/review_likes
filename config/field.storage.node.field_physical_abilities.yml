@@ -32,6 +32,9 @@ settings:
     -
       value: sports
       label: 'Sports:'
+    -
+      value: other
+      label: Other
   allowed_values_function: ''
 module: options
 locked: false

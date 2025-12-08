@@ -12,6 +12,7 @@ global-styling:
       css/custom.css: {}
       css/merchantregistration.css: {}
       css/merchantdashboard.css: {}
+      css/testerdashboard.css: {}
       
 
   js:

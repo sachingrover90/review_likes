@@ -497,8 +497,8 @@
       const configs = [
         // Radio groups with wrapper
         { radio: 'product_category', field: 'edit-product-category-other', value: drupalSettings.merchant_dashboard.other_term_id, hasWrapper: true },
-        { radio: 'testing_type', field: 'edit-testing-type-other', value: 24, hasWrapper: true },
-        { radio: 'tester_type', field: 'edit-tester-type-other', value: 27, hasWrapper: true },
+        { radio: 'testing_type', field: 'edit-testing-type-other', value: 22, hasWrapper: true },
+        { radio: 'tester_type', field: 'edit-tester-type-other', value: 25, hasWrapper: true },
         
         // Radio groups without wrapper (individual elements)
         { radio: 'gender_preference', field: 'edit-gender-preference-other--2', value: 'other', hasWrapper: false },

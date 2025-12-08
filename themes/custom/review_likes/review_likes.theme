@@ -464,7 +464,72 @@ if ($route_name == 'merchant_dashboard.discount_form') {
       $variables['claims'] = [];
     }
 }
+if ($route_name == 'tester_dashboard.dashboard') {
+    $variables['is_claims_gifts_page'] = TRUE;
+    
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    
+    // Load Discount content type nodes
+    $tester_query = $node_storage->getQuery()
+      ->condition('type', 'tester_profile')
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->accessCheck(TRUE);
+    
+    $tester_nids = $tester_query->execute();
+    
+    if ($tester_nids) {
+      $tester_nodes = $node_storage->loadMultiple($tester_nids);
+      $variables['claims'] = [];
+      
+      foreach ($tester_nodes as $tester) {
+       $variables['claims'][] = [
+  'id' => $tester->id(),
+  'title' => $tester->getTitle(),
+  'body' => $tester->body->value ?? '',
 
+  'Country' => $tester->field_country->value ?? 'NA',
+
+  'instagram_account' => $tester->field_testing_type_other->value ?? 'NA',
+  'facebook_account' => $tester->field_sports_specification->value ?? 'NA',
+  'x_account' => $tester->field_specific_regions->value ?? 'NA',
+
+  'previous_jobs' => $tester->field_external_id->value ?? 'NA',
+  'skills' => $tester->field_licenses_other->value ?? 'NA',
+ 'language'=> $tester->field_language->value ?? 'NA',
+ 'language' => $tester->hasField('field_language') && !$tester->get('field_language')->isEmpty()
+            ? $tester->get('field_language')->entity->label()
+            : NULL,
+ 'work' => $tester->hasField('field_filter') && !$tester->get('field_filter')->isEmpty()
+            ? $tester->get('field_filter')->entity->label()
+            : NULL,
+  'blog_url' => $tester->field_blog_url->uri ?? '#',
+  'youtube_link' => $tester->field_youtube_channel->uri ?? '#',
+
+'profile_Picture' => $tester->field_image->isEmpty()
+      ? NULL
+      : [
+          'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($tester->field_image->entity->getFileUri()),
+          'alt' => $tester->field_image->alt,
+        ],
+         'image' => $tester->hasField('field_id_verification_image') && !$tester->field_id_verification_image->isEmpty() 
+            ? [
+                'url' => \Drupal::service('file_url_generator')->generateAbsoluteString($tester->field_id_verification_image->entity->getFileUri()),
+                'alt' => $tester->field_id_verification_image->alt,
+              ] 
+            : NULL,
+
+  'portfolio_link' => $tester->field_store_link->uri ?? '#',
+
+  'created_timestamp' => $tester->getCreatedTime(),
+  'changed_timestamp' => $tester->getChangedTime(),
+];
+
+      }
+    } else {
+      $variables['claims'] = [];
+    }
+}
 }
 
 

@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.hire_tester.body
     - field.field.node.hire_tester.field_age_range
     - field.field.node.hire_tester.field_audio_stabilization
+    - field.field.node.hire_tester.field_budget_flexibility
     - field.field.node.hire_tester.field_buyer_username
     - field.field.node.hire_tester.field_camera_requirements
     - field.field.node.hire_tester.field_comment_text
@@ -41,6 +42,7 @@ dependencies:
     - field.field.node.hire_tester.field_sports_specification
     - field.field.node.hire_tester.field_tester_type_needed
     - field.field.node.hire_tester.field_testing_type_other
+    - field.field.node.hire_tester.field_urgency
     - image.style.thumbnail
     - node.type.hire_tester
   module:
@@ -77,6 +79,12 @@ content:
   field_audio_stabilization:
     type: options_buttons
     weight: 135
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_budget_flexibility:
+    type: options_select
+    weight: 155
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -327,6 +335,12 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_urgency:
+    type: options_select
+    weight: 156
+    region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path

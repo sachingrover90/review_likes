@@ -26,7 +26,7 @@ class HireTesterForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['title'] = [
-      '#markup' => '<h2 class="text-center mb-4">Hire a Tester Form</h2><h4 class="mb-4">Section 1 — Product &amp; Testing Details:</h4>',
+      '#markup' => '<h2 class="text-center mb-4">Hire a Tester Form</h2>',
     ];
     // Section 1 - Product & Testing Details
     $form['section_1'] = [
@@ -37,14 +37,14 @@ class HireTesterForm extends FormBase {
     ];
 
     // Product Category - Load from taxonomy - RADIO BUTTONS
-    $product_categories = $this->getTaxonomyTerms('product_category');
-$product_categories = $this->getTaxonomyTerms('product_category');
-foreach ($product_categories as $term_id => $term_name) {
-  \Drupal::logger('merchant_dashboard')->notice('Term ID: @id, Name: @name', [
-    '@id' => $term_id,
-    '@name' => $term_name,
-  ]);
-}
+//     $product_categories = $this->getTaxonomyTerms('product_category');
+// $product_categories = $this->getTaxonomyTerms('product_category');
+// foreach ($product_categories as $term_id => $term_name) {
+//   \Drupal::logger('merchant_dashboard')->notice('Term ID: @id, Name: @name', [
+//     '@id' => $term_id,
+//     '@name' => $term_name,
+//   ]);
+// }
 // Ensure taxonomy terms are loaded
 $product_categories = $this->getTaxonomyTerms('product_category');
 

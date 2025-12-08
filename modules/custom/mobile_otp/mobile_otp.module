@@ -162,7 +162,7 @@ function mobile_otp_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
  */
 function mobile_otp_user_login(UserInterface $account) {
   // Only redirect if profile completion is required.
-  if ($account->hasRole('merchant') || $account->hasRole('game_changer') ) {
+  if ($account->hasRole('merchant') || $account->hasRole('game_changer')|| $account->hasRole('tester')) {
     $current_request = \Drupal::service('request_stack')->getCurrentRequest();
 
     // Avoid overriding if a destination is already set.
