@@ -103,3 +103,70 @@
     }
   };
 })(jQuery, Drupal, drupalSettings);
+
+(function($) {
+  'use strict';
+  
+  $(document).ready(function() { 
+    
+    // Check the form
+    var $form = $('#tester-dashboard-tester-account-form');   
+    
+    // Check discount select
+    var $select = $('#edit-tester-account');    
+    
+    // Find all containers
+    var $containers = $('[id^="account-container-"]');    
+    $containers.each(function() {
+    });    
+    // Simple toggle function
+    function toggleDiscounts() {
+      var value = $select.val();      
+      // Hide all
+      $containers.hide();      
+      // Show selected
+      if (value) {
+        $('#account-container-' + value).show();
+      }
+    }    
+    // Bind event
+    $select.change(toggleDiscounts);    
+    // Initial state
+    toggleDiscounts();
+  });
+  
+})(jQuery);
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+
+//   // When clicking a tab, store its value
+//   document.querySelectorAll('#accountTabs button[data-tab]').forEach(function (btn) {
+//     btn.addEventListener('click', function () {
+//       localStorage.setItem('activeTab', this.getAttribute('data-tab'));
+//     });
+//   });
+
+//   // On page reload, restore the active tab
+//   const activeTab = localStorage.getItem('activeTab');
+//   if (activeTab) {
+
+//     // Remove existing active classes
+//     document.querySelectorAll('#accountTabs .nav-link').forEach(function (btn) {
+//       btn.classList.remove('active');
+//     });
+//     document.querySelectorAll('.tab-pane').forEach(function (tab) {
+//       tab.classList.remove('show', 'active');
+//     });
+
+//     // Activate saved tab
+//     const targetBtn = document.querySelector('#accountTabs button[data-tab="'+activeTab+'"]');
+//     const targetPane = document.getElementById(activeTab);
+
+//     if (targetBtn && targetPane) {
+//       targetBtn.classList.add('active');
+//       targetPane.classList.add('show', 'active');
+//     }
+//   }
+
+// });

@@ -33,3 +33,24 @@ tester_dashboard.tester_edit_form:
     parameters:
       nid:
         type: integer        
+
+tester_dashboard.tester_account:
+  path: '/tester/account'
+  defaults:
+    _title: 'Tester Dashboard'
+    _form: '\Drupal\tester_dashboard\Form\TesterAccountForm'
+  requirements:
+    _permission: 'access tester dashboard'
+    _role: 'tester'
+
+tester_dashboard.delete_account:
+  path: '/tester/delete-account/{node}'
+  defaults:
+    _controller: '\Drupal\tester_dashboard\Controller\DeleteController::unpublishNode'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'node.delete'
+  options:
+    parameters:
+      node:
+        type: entity:node      
