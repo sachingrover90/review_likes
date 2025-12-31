@@ -62,7 +62,7 @@ class ProductForm extends FormBase {
     // Extract Data Section
     $form['extract_section'] = [
       '#type' => 'fieldset',
-      '#attributes' => ['class' => ['mb-4']],
+      '#attributes' => ['class' => ['row', 'justify-content-center', 'align-items-baseline', 'mb-3']],
     ];
 
     $form['extract_section']['title'] = [
@@ -70,27 +70,41 @@ class ProductForm extends FormBase {
     ];
   $form['elink'] = [
   '#type' => 'textfield',
-  '#title' => $this->t('Product URL'),
-   '#attributes' => [ 'placeholder' => 'Provide the link','class' => ['row', 'justify-content-center', 'align-items-baseline', 'mb-3']], 
+  // '#title' => $this->t('Product URL'),
+   '#attributes' => [ 'placeholder' => 'Provide marketplace URL where you want to extract product details','class' => ['form-control', 'py-3']], 
 //   '#required' => TRUE,
-      '#prefix' => '<div class="row justify-content-center"><div class="col-md-6 mb-3">',
+      '#prefix' => '<div class="row justify-content-center align-items-baseline mb-3"><div class="col-md-8 mb-3">',
       '#suffix' => '</div>',
 ];
+
+    $form['hint'] = [
+      '#markup' => '<span class="g-title text-center"><i>Note: Only Amazon, Ebay link can be use to extract data</i></span>',
+     '#suffix' => '</div></div>',
+    ];
 
     $form['extract_button'] = [
   '#type' => 'submit',
   '#value' => $this->t('Extract Data'),
   '#submit' => ['::redirectToController'],
   '#limit_validation_errors' => [['elink']],
-  '#attributes' => ['class' => ['btn', 'btn-default']],
-  '#prefix' => '<div class="col-md-2">',
+  '#attributes' => ['class' => ['btn', 'btn-default'],  'id' => 'extractDataBtn',],
+  '#prefix' => '<div class="row justify-content-center mt-3 mb-5"><div class="col-md-2">',
       '#suffix' => '</div>',
 ];
 
-    $form['hint'] = [
-      '#markup' => '<span class="g-title text-center"><i>Please provide the Amazon, ebay, flipkart links only to extract product data</i></span>',
-     '#suffix' => '</div>',
-    ];
+
+   $form['manually_button'] = [
+
+  '#type' => 'button',
+  '#value' => $this->t('Add Product Details Manually'),
+  '#attributes' => [
+    'class' => ['btn', 'btn-default button js-form-submit form-submit'],
+    'type' => 'button',
+  ],
+  '#prefix' => '<div class="col-md-3">',
+      '#suffix' => '</div></div>',
+];
+
 
 
 
@@ -110,7 +124,7 @@ class ProductForm extends FormBase {
 $form['platforms_wrapper'] = [
   '#type' => 'container',
   '#attributes' => ['id' => 'platforms-wrapper'],
-  '#prefix' => '<div class="row justify-content-center"><div id="platforms-wrapper"> <div class="row justify-content-center"> <div class="col-md-10"><div class="mb-3 adminplatform"> <div class="platform-wrapper">',
+  '#prefix' => '<div id="productDetailsSection" style="display: block;"><div class="row justify-content-center mt-3"><div class="row justify-content-center"><div id="platforms-wrapper"> <div class="row justify-content-center"> <div class="col-md-10"><div class="mb-3 adminplatform"> <div class="platform-wrapper">',
   '#suffix' => '</div> </div> </div> </div></div>',
 ];
 
@@ -165,9 +179,9 @@ foreach ($platform_items as $delta) {
         '#type' => 'textfield',
         //  '#title' => $this->t('Coupon'),
         '#attributes' => ['placeholder' => 'Coupon Code', 'class' => ['form-control me-4']],
-        '#required' => TRUE,
+        // '#required' => TRUE,
         '#default_value' => $form_state->getValue(['platforms_wrapper', 'platforms', $delta, 'coupon']),
-        '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Coupon Code</h5>',
+        '#prefix' => '<div class="col-md-3 mb-3"><h5 class="required mb-1">Coupon Code</h5>',
         '#suffix' => '</div>',
       ];
 
@@ -175,13 +189,14 @@ foreach ($platform_items as $delta) {
   // Date field
         $form['platforms_wrapper']['platforms'][$delta]['date'] = [
         '#type' => 'date',
-        '#title' => $this->t('Date'),
-        '#attributes' => ['class' => ['form-control me-4']],
+        '#title' => $this->t('Coupon Expiry Date'),
+        '#attributes' => ['class' => ['form-control']],
         // '#default_value' => $form_state->getValue(
         //     ['platforms_wrapper', 'platforms', $delta, 'date'], 
         //     date('Y-m-d') // Default to current date
         // ),
-        '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Date</h5>',
+        '#required' => TRUE,
+        '#prefix' => '<div class="col-md-3 mb-3">',
         '#suffix' => '</div>',
         ];
 
@@ -427,7 +442,7 @@ $form['platforms_wrapper']['hint'] = [
         // '#default_value' => $form_state->getValue('product_variation', 'no'),
         '#required' => TRUE,
         '#prefix' => '<div class="col-md-5 mb-3">',
-        '#suffix' => '</div> </div>',
+        '#suffix' => '</div> </div></div>',
         // '#attributes' => [
         //     'class' => ['d-flex', 'align-items-center', 'gap-3'],
         // ],
@@ -437,7 +452,7 @@ $form['platforms_wrapper']['hint'] = [
 $form['actions'] = [
   '#type' => 'actions',
   '#prefix' => '<div class="col-md-12 text-center my-4">',
-  '#suffix' => '</div>',
+  '#suffix' => '</div></div>',
 ];
 
 // Add Product button

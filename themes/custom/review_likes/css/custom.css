@@ -82,3 +82,7 @@ span.fieldset-legend.js-form-required.form-required::after {
     margin-top: -26px;
     margin-left: 23px;
 }
+
+#productDetailsSection {
+  display: none;
+}

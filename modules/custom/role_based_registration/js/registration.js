@@ -117,30 +117,112 @@ document.getElementById('edit-product-id').addEventListener('input', function() 
 });
 
 
+// document.addEventListener('DOMContentLoaded', function () {
+//   // Select all rating fields
+//   const ratingFields = document.querySelectorAll('.rating-field');
+
+//   ratingFields.forEach(function(field) {
+//     field.addEventListener('input', function() {
+//       // Allow only numbers and commas
+//       this.value = this.value.replace(/[^0-9,]/g, '');
+
+//       // Optional: remove duplicate commas
+//       this.value = this.value.replace(/,+/g, ',');
+
+//       // Optional: remove leading or trailing commas
+//       this.value = this.value.replace(/^,|,$/g, '');
+//     });
+//   });
+// });
+
+
 document.addEventListener('DOMContentLoaded', function () {
-  // Select all rating fields
   const ratingFields = document.querySelectorAll('.rating-field');
 
-  ratingFields.forEach(function(field) {
-    field.addEventListener('input', function() {
-      // Allow only numbers and commas
-      this.value = this.value.replace(/[^0-9,]/g, '');
+  ratingFields.forEach(function (field) {
+    field.addEventListener('input', function () {
 
-      // Optional: remove duplicate commas
-      this.value = this.value.replace(/,+/g, ',');
+      // Allow digits and dot
+      this.value = this.value.replace(/[^0-9.]/g, '');
 
-      // Optional: remove leading or trailing commas
-      this.value = this.value.replace(/^,|,$/g, '');
+      // Allow only ONE dot
+      const parts = this.value.split('.');
+      if (parts.length > 2) {
+        this.value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
     });
   });
 });
 
+
 (function ($, Drupal) {
   Drupal.behaviors.toggleWrapper = {
     attach: function (context, settings) {
-      console.log('here i am..');
+      // console.log('here i am..');
       $(".toggle-wrapper.mt-3", context).wrapInner('<label class="toggle-switch"></label>');
     }
   };
 })(jQuery, Drupal);
 
+
+
+(function (Drupal, once) {
+  Drupal.behaviors.showProductDetails = {
+    attach: function (context) {
+//  console.log('product i am..');
+      once('showProductDetails', '#edit-manually-button', context).forEach(function (button) {
+
+        const productDetailsSection = document.getElementById('productDetailsSection');
+        if (!productDetailsSection) {
+          return;
+        }
+
+        button.addEventListener('click', function (e) {
+          e.preventDefault(); // stop form submit
+          productDetailsSection.style.display = 'block';
+        });
+
+      });
+
+    }
+  };
+})(Drupal, once);
+
+
+
+(function (Drupal, once) {
+  Drupal.behaviors.extractConfirm = {
+    attach: function (context) {
+
+      once('extractConfirm', '#extractDataBtn', context).forEach(function (button) {
+
+        const modal = document.getElementById('extractConfirmModal');
+        const confirmBtn = document.getElementById('confirmExtract');
+        const cancelBtn = document.getElementById('cancelExtract');
+
+        if (!modal || !confirmBtn || !cancelBtn) {
+          return;
+        }
+
+        // Intercept submit click
+        button.addEventListener('click', function (e) {
+          e.preventDefault(); // STOP submit
+          modal.style.display = 'flex';
+        });
+
+        // Confirm → submit form
+        confirmBtn.addEventListener('click', function () {
+          modal.style.display = 'none';
+          button.closest('form').submit(); // REAL submit
+        });
+
+        // Cancel → close popup
+        cancelBtn.addEventListener('click', function () {
+          modal.style.display = 'none';
+        });
+
+      });
+    }
+  };
+})(Drupal, once);

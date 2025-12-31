@@ -70,32 +70,32 @@ class ProductEditForm extends FormBase {
       '#attributes' => ['class' => ['mb-4']],
     ];
 
-    $form['extract_section']['title'] = [
-      '#markup' => '<h3 class="mb-4 text-center">Extract Product Details From Platform</h3>',
-    ];
-  $form['elink'] = [
-  '#type' => 'textfield',
-  '#title' => $this->t('Product URL'),
-   '#attributes' => [ 'placeholder' => 'Provide the link','class' => ['row', 'justify-content-center', 'align-items-baseline', 'mb-3']], 
-//   '#required' => TRUE,
-      '#prefix' => '<div class="row justify-content-center"><div class="col-md-6 mb-3">',
-      '#suffix' => '</div>',
-];
+//     $form['extract_section']['title'] = [
+//       '#markup' => '<h3 class="mb-4 text-center">Extract Product Details From Platform</h3>',
+//     ];
+//   $form['elink'] = [
+//   '#type' => 'textfield',
+//   '#title' => $this->t('Product URL'),
+//    '#attributes' => [ 'placeholder' => 'Provide the link','class' => ['row', 'justify-content-center', 'align-items-baseline', 'mb-3']], 
+// //   '#required' => TRUE,
+//       '#prefix' => '<div class="row justify-content-center"><div class="col-md-6 mb-3">',
+//       '#suffix' => '</div>',
+// ];
 
-    $form['extract_button'] = [
-  '#type' => 'submit',
-  '#value' => $this->t('Extract Data'),
-  '#submit' => ['::redirectToController'],
-  '#limit_validation_errors' => [['elink']],
-  '#attributes' => ['class' => ['btn', 'btn-default']],
-  '#prefix' => '<div class="col-md-2">',
-      '#suffix' => '</div>',
-];
+//     $form['extract_button'] = [
+//   '#type' => 'submit',
+//   '#value' => $this->t('Extract Data'),
+//   '#submit' => ['::redirectToController'],
+//   '#limit_validation_errors' => [['elink']],
+//   '#attributes' => ['class' => ['btn', 'btn-default']],
+//   '#prefix' => '<div class="col-md-2">',
+//       '#suffix' => '</div>',
+// ];
 
-    $form['hint'] = [
-      '#markup' => '<span class="g-title text-center"><i>Please provide the Amazon, ebay, flipkart links only to extract product data</i></span>',
-     '#suffix' => '</div>',
-    ];
+//     $form['hint'] = [
+//       '#markup' => '<span class="g-title text-center"><i>Please provide the Amazon, ebay, flipkart links only to extract product data</i></span>',
+//      '#suffix' => '</div>',
+//     ];
 
 
 
@@ -189,7 +189,7 @@ foreach ($platform_items as $delta => $item) {
         '#type' => 'textfield',
         //  '#title' => $this->t('Coupon'),
         '#attributes' => ['placeholder' => 'Coupon Code', 'class' => ['form-control me-4']],
-        '#required' => TRUE,
+        // '#required' => TRUE,
         '#default_value' => $item['coupon'] ?? '',
         '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Coupon Code</h5>',
         '#suffix' => '</div>',
@@ -199,12 +199,24 @@ foreach ($platform_items as $delta => $item) {
   // Date field
         $form['platforms_wrapper']['platforms'][$delta]['date'] = [
         '#type' => 'date',
-        '#title' => $this->t('Date'),
-        '#attributes' => ['class' => ['form-control me-4']],
+        '#title' => $this->t('Coupon Expiry Date'),
+        '#attributes' => ['class' => ['form-control']],
         '#default_value' => !empty($item['date']) ? date('Y-m-d', strtotime($item['date'])) : '',
-        '#prefix' => '<div class="col-md-2 mb-3"><h5 class="required mb-1">Date</h5>',
+         '#required' => TRUE,
+        '#prefix' => '<div class="col-md-3 mb-3">',
         '#suffix' => '</div>',
         ];
+// Check if affiliate value exists (TRUE if not empty)
+$has_affiliate_value = !empty($item['affliate']);
+
+// Get toggle value from form state (AJAX-safe)
+$affiliate_toggle = $form_state->getValue(
+  ['platforms_wrapper', 'platforms', $delta, 'affiliate_toggle'],
+  $item['affiliate_toggle'] ?? FALSE
+);
+
+// Final decision: enable field if either is TRUE
+$affiliate_enabled = $affiliate_toggle || $has_affiliate_value;
 
 // Affiliate Link field
 $form['platforms_wrapper']['platforms'][$delta]['affliate'] = [
@@ -213,13 +225,9 @@ $form['platforms_wrapper']['platforms'][$delta]['affliate'] = [
     'placeholder' => 'Affiliate Link', 
     'class' => ['form-control', 'me-4', 'affiliate-field'],
     'id' => 'paffliatelink-' . $delta,
-    'disabled' => !$form_state->getValue([
-      'platforms_wrapper', 'platforms', $delta, 'affiliate_toggle'
-    ], FALSE),
+    'disabled' =>!$affiliate_enabled,
   ],
-  '#required' => $form_state->getValue([
-    'platforms_wrapper', 'platforms', $delta, 'affiliate_toggle'
-  ], FALSE),
+  '#required' => $affiliate_toggle,
   '#default_value' => $item['affliate'] ?? '',
   '#prefix' => '<div class="col-md-5 mb-3" id="affiliate-field-wrapper-' . $delta . '"><h5 class="mb-1">Affiliate Link</h5>',
   '#suffix' => '</div>',
@@ -231,7 +239,7 @@ $form['platforms_wrapper']['platforms'][$delta]['affliate'] = [
 // Toggle switch for affiliate link - using custom markup
 $form['platforms_wrapper']['platforms'][$delta]['affiliate_toggle'] = [
   '#type' => 'checkbox',
-  '#title' => $this->t('Enable Affiliate Link'),
+  // '#title' => $this->t('Enable Affiliate Link'),
  '#default_value' => $item['affiliate_toggle'] ?? FALSE,
   '#attributes' => [
     'class' => ['affiliateToggle'],
